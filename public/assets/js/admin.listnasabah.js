@@ -333,31 +333,27 @@ const searchKodepos = async (el) => {
         }
     })
     .then((response) => {
+        if (response.data.code === 'OK') {
+            let elPostList = '';
 
-        // console.log(response.data.status);
-        if (response.data.code === 200) {
-            if (response.data.messages === 'No data can be returned.') {
-                $('#kodepos-wraper').html(`<div class="position-absolute bg-white d-flex align-items-center justify-content-center" style="z-index: 10;top: 0;bottom: 0;left: 0;right: 0;">
-                    <h6 style="opacity: 0.6;">kodepos tidak ditemukan</h6>
-                </div>`);    
-            } 
-            else {
-                let elPostList = '';
-
-                response.data.data.forEach(x => {
-                    elPostList += `
-                    <div class="w-100">
-                        <div class="kodepos-list w-100 d-flex align-items-center px-3 py-3" style="cursor: pointer;font-size:16px;" onclick="changeKodeposVal(this,'${x.postalcode}','${x.urban}','${x.subdistrict}','${x.city}','${x.province}');">
-                            <span class="w-100" style="display: -webkit-box;-webkit-line-clamp: 1;-webkit-box-orient: vertical;overflow: hidden;text-overflow: ellipsis;">
-                                ${x.postalcode} - ${x.urban}, ${x.subdistrict}, ${x.city}, ${x.province}
-                            </span>
-                        </div>
-                    </div>`;
-                });
-        
-                $('#kodepos-wraper').html(elPostList);
-            } 
+            response.data.data.forEach(x => {
+                elPostList += `
+                <div class="w-100">
+                    <div class="kodepos-list w-100 d-flex align-items-center px-3 py-3" style="cursor: pointer;font-size:16px;" onclick="changeKodeposVal(this,'${x.postalcode}','${x.urban}','${x.subdistrict}','${x.city}','${x.province}');">
+                        <span class="w-100" style="display: -webkit-box;-webkit-line-clamp: 1;-webkit-box-orient: vertical;overflow: hidden;text-overflow: ellipsis;">
+                            ${x.postalcode} - ${x.urban}, ${x.subdistrict}, ${x.city}, ${x.province}
+                        </span>
+                    </div>
+                </div>`;
+            });
+    
+            $('#kodepos-wraper').html(elPostList);
         }
+    })
+    .catch((response) => {
+        $('#kodepos-wraper').html(`<div class="position-absolute bg-white d-flex align-items-center justify-content-center" style="z-index: 10;top: 0;bottom: 0;left: 0;right: 0;">
+            <h6 style="opacity: 0.6;">kodepos tidak ditemukan</h6>
+        </div>`);  
     })
 };
  
@@ -393,12 +389,10 @@ const crudNasabah = async (el,event) => {
         $('#formAddEditNasabah button#submit #spinner').removeClass('d-none');
         if (modalTitle == 'edit nasabah') {
             form.set('is_verify',$('#formAddEditNasabah input[name=is_verify]').val());
-            form.set('uang',$('input[name=uang]').val() != "" ? $('input[name=uang]').val() : 0);
             httpResponse = await httpRequestPut(`${APIURL}/admin/editnasabah`,form);    
         } 
         else {
             form.set('kodepos',$('input[name=kodepos]').val());
-            form.set('uang',$('input[name=uang]').val() != "" ? $('input[name=uang]').val() : 0);
             httpResponse = await httpRequestPost(`${APIURL}/register/nasabah`,form);    
         }
         $('#formAddEditNasabah button#submit #text').removeClass('d-none');
@@ -600,9 +594,9 @@ const doValidate = (form) => {
             $('#formAddEditNasabah #username-error').html('*username harus di isi');
             status = false;
         }
-        else if ($('#formAddEditNasabah #username').val().length < 7 || $('#formAddEditNasabah #username').val().length > 20) {
+        else if ($('#formAddEditNasabah #username').val().length < 8 || $('#formAddEditNasabah #username').val().length > 20) {
             $('#formAddEditNasabah #username').addClass('is-invalid');
-            $('#formAddEditNasabah #username-error').html('*minimal 7 huruf dan maksimal 20 huruf');
+            $('#formAddEditNasabah #username-error').html('*minimal 8 huruf dan maksimal 20 huruf');
             status = false;
         }
         else if (/\s/.test($('#formAddEditNasabah #username').val())) {
@@ -612,9 +606,9 @@ const doValidate = (form) => {
         }
         // new pass 
         if ($('#modalAddEditNasabah #newpass').val() !== '') {   
-            if ($('#modalAddEditNasabah #newpass').val().length < 7 || $('#modalAddEditNasabah #newpass').val().length > 20) {
+            if ($('#modalAddEditNasabah #newpass').val().length < 8 || $('#modalAddEditNasabah #newpass').val().length > 20) {
                 $('#modalAddEditNasabah #newpass').addClass('is-invalid');
-                $('#modalAddEditNasabah #newpass-error').html('*minimal 7 huruf dan maksimal 20 huruf');
+                $('#modalAddEditNasabah #newpass-error').html('*minimal 8 huruf dan maksimal 20 huruf');
                 status = false;
             }
             else if (/\s/.test($('#modalAddEditNasabah #newpass').val())) {
@@ -625,6 +619,12 @@ const doValidate = (form) => {
         }
     }
 
+    // // tgl lahir validation
+    // if ($('#formAddEditNasabah #tgllahir').val() == '') {
+    //     $('#formAddEditNasabah #tgllahir').addClass('is-invalid');
+    //     $('#formAddEditNasabah #tgllahir-error').html('*tgl lahir harus di isi');
+    //     status = false;
+    // }
     // nik validation
     let resultNik = '';
 
@@ -636,12 +636,6 @@ const doValidate = (form) => {
     if (resultNik.status == 'error') {
         $('#formAddEditNasabah #nik').addClass('is-invalid');
         $('#formAddEditNasabah #nik-error').html(resultNik.pesan);
-        status = false;
-    }
-    // uang validation
-    if ($('#formAddEditNasabah #uang').val().length > 11) {
-        $('#formAddEditNasabah #uang').addClass('is-invalid');
-        $('#formAddEditNasabah #uang-error').html('*maksimal 11 karakter');
         status = false;
     }
     // notelp validation
