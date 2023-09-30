@@ -8,23 +8,16 @@
 
 - php 7.3 or higher
 - [composer 2.3.4](https://getcomposer.org/)
-- mysql
+- XAMPP
 
 ## Setup
 
 <ol>
-    <li> Clone <b>or</b> Download as ZIP
-    <li> Change Directory to root project </li>
-    <li> Create database <b>db_bst</b> </li>
-    <li> run:</li>
+    <li> clone <b>or</b> Download as ZIP
+    <li>place the project folder inside the 'htdocs' folder</li>
+    <li>name that folder 'banksampahpedia'</li>
+    <li>turn on your XAMPP</li>
+    <li>create database <b>db_banksampahpedia</b></li>
+    <li>import db_banksampahpedia.sql</li>
+    <li>open <a href="http://localhost/banksampahpedia/public/">http://localhost/banksampahpedia/public/</a> on your browser</li>
 </ol>
-
-```
-composer install
-
-php spark migrate
-
-php spark db:seed AppSeed
-
-php spark serve -port 8888
-```
