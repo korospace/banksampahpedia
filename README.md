@@ -1,6 +1,6 @@
 <p align="center">
     <h1 align="center">
-        Website Banksampah Dahlia
+        Website Banksampah Pedia
     </h1>
 </p>
 

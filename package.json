@@ -1,7 +1,7 @@
 {
-  "name": "bsbl",
+  "name": "banksampahpedia",
   "version": "1.0.0",
-  "description": "web bank sampah budiluhur",
+  "description": "web bank sampah pedia",
   "main": "index.js",
   "directories": {
     "test": "tests"
