@@ -33,10 +33,10 @@
 <!-- **** Alert info **** -->
 <?= $this->include('Components/alertInfo'); ?>
 
-<nav class="bg-white border-gray-200 ">
+<nav class="px-2 bg-white border-gray-200">
   <div class="flex flex-wrap items-center justify-between max-w-screen-xl py-6 mx-auto">
     <a href="#" class="flex items-center">
-      <img src="<?= base_url('assets/images/banksampah-logo.webp'); ?>" class="h-8 mr-3" alt="Banksampah Logo" />
+      <img src="<?= base_url('assets/images/banksampahpedia/logo.png'); ?>" class="h-8 mr-3" alt="Banksampah Logo" />
     </a>
     <button data-collapse-toggle="navbar-default" type="button" class="inline-flex items-center p-2 ml-3 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 " aria-controls="navbar-default" aria-expanded="false">
       <span class="sr-only">Open main menu</span>
@@ -56,242 +56,144 @@
           <a href="<?= base_url('#mitra'); ?>" class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700 md:p-0">Mitra</a>
         </li>
         <li>
+          <a href="<?= base_url('#contact-us'); ?>" class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700 md:p-0">Contact Us</a>
+        </li>
+        <!-- <li>
           <a href="<?= base_url('#penghargaan'); ?>" class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700 md:p-0">Penghargaan</a>
         </li>
         <li>
           <a href="<?= base_url('#pencapaian'); ?>" class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700 md:p-0">Data Sampah</a>
-        </li>
+        </li> -->
       </ul>
     </div>
-    <div class="hidden md:flex gap-4">
-      <a href="<?= base_url('login'); ?>" class="px-4 py-2 text-green-700 rounded-md bg-green-50">Masuk</a>
-      <a href="<?= base_url('register'); ?>" class="px-4 py-2 bg-green-700 rounded-md text-green-50">Daftar</a>
+    <div class="hidden gap-4 md:flex">
+      <!-- <a href="<?= base_url('login'); ?>" class="px-4 py-2 text-green-700 rounded-md bg-green-50">Masuk</a> -->
+      <a href="<?= base_url('register'); ?>" class="px-4 py-2 bg-green-700 rounded-lg text-green-50">Bergabung</a>
     </div>
   </div>
 </nav>
 
 <div class="mx-8 space-y-32 sm:mx-12">
-  <section id="beranda" class="grid w-full grid-cols-1 gap-4 px-8 mt-8 sm:grid-cols-2">
-    <div class="flex flex-col w-full gap-4 place-content-center">
-      <p class="text-5xl font-light">
-        <span class="text-green-800">
-          Kumpulkan
-        </span>
-        dan
-        <span class="text-green-800">
-          Tukarkan
-        </span>
-        <br>
-        Sampahmu Menjadi Uang
-        <br>
-        Bersama Kami
-      </p>
-      <p class="text-lg">
-        Dapatkan berbagai keuntungan bersama kami dengan cara mengumpulkan dan menukarkan sampah anda menjadi uang. Jadi Tunggu apalagi segera daftarkan diri anda sekarang juga
-      </p>
+  <section id="beranda" class="w-full px-8 mt-8">
+    <div class="relative grid grid-cols-1 p-4 md:grid-cols-2 rounded-3xl" style="background-image: url('<?= base_url("assets/images/banksampahpedia/bg.png"); ?>'); background-size: cover; height: 300px;">
+      <div class="m-4 space-y-4">
+        <p class="flex text-5xl font-bold ">Bank Sampah Pedia</p>
+        <p>
+          Bank Sampah Pedia merupakan sebuah website berbayar yang berfungsi sebagai wadah manajemen Bank Sampah yang dapat digunakan oleh Bank Sampah di seluruh Indonesia.
+        </p>
+        <p>
+          <a href="<?= base_url('register'); ?>" class="px-4 py-2 bg-green-700 rounded-xl text-green-50">Bergabung</a>
+        </p>
+      </div>
+      <div class="place-content-end">
+        <img src="<?= base_url("assets/images/banksampahpedia/banner.png") ?>" alt="">
+      </div>
     </div>
-    <div class="flex w-full place-content-center">
-      <img src="<?= base_url("assets/images/banksampah-banner.jpg") ?>" alt="">
-    </div>
-  </section>
 
-  <section id="pencapaian" class="space-y-12">
-    <p class="px-4 text-4xl font-bold text-center capitalize">pencapaian kami sejauh ini</p>
-    <p class="px-4 text-lg text-center text-gray-700">
-      Kami telah dipercaya oleh banyak sekali orang dan <br>
-      sudah banyak yang bergabung menjadi member kami
-    </p>
-    <div id="container-sampah" class="grid grid-cols-1 gap-4 px-8 sm:grid-cols-2 md:grid-cols-4 place-items-center">
-      <div class="flex flex-col p-4">
-        <p id="sampah-kertas" class="text-2xl font-semibold text-green-700">0KG</p>
-        <p id="kategori-kertas" class="flex-1 text-gray-700 uppercase">sampah </p>
-      </div>
-      <div class="flex flex-col p-4">
-        <p id="sampah-plastik" class="text-2xl font-semibold text-green-700">0KG</p>
-        <p id="kategori-plastik" class="flex-1 text-gray-700 uppercase">sampah </p>
-      </div>
-      <div class="flex flex-col p-4">
-        <p id="sampah-logam" class="text-2xl font-semibold text-green-700">0KG</p>
-        <p id="kategori-logam" class="flex-1 text-gray-700 uppercase">sampah </p>
-      </div>
-      <div class="flex flex-col p-4">
-        <p id="sampah-lain-lain" class="text-2xl font-semibold text-green-700">0KG</p>
-        <p id="kategori-lain-lain" class="flex-1 text-gray-700 uppercase">sampah</p>
-      </div>
-    </div>
   </section>
 
   <section id="program" class="space-y-12">
-    <p class="px-4 text-4xl font-bold text-center capitalize">program kami</p>
-    <p class="px-4 text-lg text-center text-gray-700">
-      Kami telah dipercaya oleh banyak sekali orang dan sudah banyak yang bergabung menjadi member kami
-    </p>
-    <!-- <div class="grid grid-cols-1 gap-4 px-8 sm:grid-cols-3 place-items-center">
-      <button class="w-full px-8 py-4 mx-8 font-semibold text-white uppercase bg-green-700 rounded-full sm:mx-32 hover:shadow-lg hover:text-green-50 hover:bg-green-600">
-        kuliah kerja nyata
-      </button>
-      <button class="w-full px-8 py-4 mx-8 font-semibold text-white uppercase bg-green-700 rounded-full sm:mx-32 hover:shadow-lg hover:text-green-50 hover:bg-green-600">
-        sosialisasi
-      </button>
-      <button class="w-full px-8 py-4 mx-8 font-semibold text-white uppercase bg-green-700 rounded-full sm:mx-32 hover:shadow-lg hover:text-green-50 hover:bg-green-600">
-        webinar
-      </button>
-    </div> -->
-    <div id="container-article" class="grid items-center grid-cols-1 gap-4 sm:grid-cols-3 place-items-start">
-
-    </div>
-  </section>
-
-  <section id="mission" class="space-y-12">
-    <div class="grid grid-cols-1 gap-4 px-8 sm:grid-cols-2">
-      <div class="flex p-4 place-content-center place-items-center">
-        <p class="text-4xl font-semibold text-green-700">Our Mission</p>
+    <div class="grid grid-cols-1 sm:grid-cols-2">
+      <div>
+        <p class="text-4xl font-extrabold text-center">Tujuan Kegiatan Bank Sampah Pedia</p>
+        <img src="<?= base_url("assets/images/banksampahpedia/laptop.png") ?>" alt="">
       </div>
-      <div class="flex p-4">
-        <p class="text-xl text-gray-700 ">
-          Dengan mengusung program unggulan kami yang mana kami akan mengurangi sampah yang kami hasilkan ( Reduce ), Menggunakan kembali sampah yang telah kami hasilkan ( Reuse ) dan Menggunakan kembali sampah yang telah kami buat ( Recycle )
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <section id="threear" class="space-y-12">
-    <div class="grid grid-cols-1 gap-4 px-8 sm:grid-cols-2">
-      <div class="flex flex-col gap-8 p-4 place-content-center">
-        <p class="text-4xl font-bold text-green-700 capitalize">reuse - menggunakan kembali</p>
-        <p class="text-xl text-gray-700">
-          Dengan mengusung program unggulan kami yang mana kami akan mengurangi sampah yang kami hasilkan ( Reduce ), Menggunakan kembali sampah yang telah kami hasilkan ( Reuse ) dan Menggunakan kembali sampah yang telah kami buat ( Recycle )
-        </p>
-      </div>
-      <div class="flex p-4 place-content-center place-items-center">
-        <div class="flex w-full place-content-center">
-          <img src="<?= base_url("assets/images/bg-r1.jpg") ?>" alt="">
+      <div class="flex flex-col gap-8">
+        <div class="flex gap-2 place-items-center">
+          <img src="<?= base_url("assets/images/banksampahpedia/li.png") ?>" alt="">
+          <div>
+            <p class="text-2xl font-extrabold ">Mengurangi Sampah (Reduce)</p>
+            <p>
+              Mengurangi penggunaan produk yang berpotensi menjadi sampah, karena penggunaan barang yang sulit didaur ulang juga akan menjadi masalah baru.
+            </p>
+          </div>
         </div>
-      </div>
-    </div>
-    <div class="grid grid-cols-1 gap-4 px-8 sm:grid-cols-2">
-      <div class="flex p-4 place-content-center place-items-center">
-        <div class="flex w-full place-content-center">
-          <img src="<?= base_url("assets/images/bg-r2.jpg") ?>" alt="">
+        <div class="flex gap-2 place-items-center">
+          <img src="<?= base_url("assets/images/banksampahpedia/li.png") ?>" alt="">
+          <div>
+            <p class="text-2xl font-extrabold ">Penggunaan Kembali (Reuse)</p>
+            <p>
+              Penggunaan kembali adalah menggunakan lagi suatu barang lebih dari sekali. Ini mencakup penggunaan kembali secara konvensional di mana barang dipakai lagi dengan fungsi yang sama, dan penggunaan kembali di mana barang dipergunakan dengan fungsi yang berbeda.
+            </p>
+          </div>
         </div>
-      </div>
-      <div class="flex flex-col gap-8 p-4 place-content-center">
-        <p class="text-4xl font-bold text-green-700 capitalize">reduce - mengurangi penggunaan</p>
-        <p class="text-xl text-gray-700">
-          Kurangi jejak lingkungan dengan langkah-langkah kecil yang berdampak besar. Mulai dari meminimalisir konsumsi berlebihan hingga mengadopsi gaya hidup hemat sumber daya. Mari bersama-sama mengurangi dampak negatif dan menjaga keindahan bumi yang kita cintai.
-        </p>
-      </div>
-    </div>
-    <div class="grid grid-cols-1 gap-4 px-8 sm:grid-cols-2">
-      <div class="flex flex-col gap-8 p-4 place-content-center">
-        <p class="text-4xl font-bold text-green-700 capitalize">recycle - mengolah kembali</p>
-        <p class="text-xl text-gray-700">
-          Mendaur ulang sebagai langkah nyata menuju lingkungan yang lebih bersih dan sehat. Dengan mengubah sampah menjadi sumber daya berharga, kita dapat mengurangi kebutuhan akan bahan baku baru dan memperpanjang siklus hidup produk. Bergabunglah dalam gerakan daur ulang untuk masa depan yang berkelanjutan
-        </p>
-      </div>
-      <div class="flex p-4 place-content-center place-items-center">
-        <div class="flex w-full place-content-center">
-          <img src="<?= base_url("assets/images/bg-r3.jpg") ?>" alt="">
+        <div class="flex gap-2 place-items-center">
+          <img src="<?= base_url("assets/images/banksampahpedia/li.png") ?>" alt="">
+          <div>
+            <p class="text-2xl font-extrabold ">Daur Ulang(Recycle)</p>
+            <p>
+              Daur ulang adalah proses untuk menjadikan suatu bahan bekas menjadi bahan baru dengan tujuan mencegah adanya sampah yang sebenarnya dapat menjadi sesuatu yang berguna
+            </p>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <section id="services" class="space-y-12">
-    <div class="grid grid-cols-1 gap-4 px-8 sm:grid-cols-2">
-      <div class="flex p-4 place-content-center place-items-center">
-        <p class="text-4xl font-semibold text-green-700">Alur Pelayanan</p>
-      </div>
-      <div class="flex p-4">
-        <p class="text-xl text-gray-700 ">
-          Demi menciptakan kenyamanan dalam pelayanan kami membagi 4 tahap alur dalam melayani nasabah yang menabung sampahnya di kamu
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <section id="route" class="space-y-12">
-    <div class="grid grid-cols-1 gap-4 px-8 sm:grid-cols-2">
-      <div class="flex p-4 place-content-center place-items-center">
-        <div class="flex w-full place-content-center">
-          <img src="<?= base_url("assets/images/bg-service.jpg") ?>" alt="">
-        </div>
-      </div>
-      <div class="p-4 space-y-14">
-        <div>
-          <p class="text-2xl font-semibold text-gray-700 capitalize">pendaftaran akun</p>
-          <hr class="w-full h-1 my-4 bg-gray-800 rounded-md">
-          <p class="text-xl text-gray-700 ">
-            Dengan mengusung program unggulan kami yang mana kami akan mengurangi sampah yang kami hasilkan ( Reduce ), Menggunakan kembali sampah yang telah kami hasilkan ( Reuse ) dan Menggunakan kembali sampah yang telah kami buat ( Recycle )
-          </p>
-        </div>
-        <div>
-          <p class="text-2xl font-semibold text-gray-700 capitalize">konsultasi admin</p>
-          <hr class="w-full h-1 my-4 bg-gray-800 rounded-md">
-          <p class="text-xl text-gray-700 ">
-            Temukan panduan dan bantuan yang Anda butuhkan: Konsultasikan pertanyaan Anda dengan admin Bank Sampah untuk solusi terbaik.
-          </p>
-        </div>
-        <div>
-          <p class="text-2xl font-semibold text-gray-700 capitalize">penimbangan sampah</p>
-          <hr class="w-full h-1 my-4 bg-gray-800 rounded-md">
-          <p class="text-xl text-gray-700 ">
-            Setelah melakukan konsultasi dengan admin. Langkah selanjutnya adalah nasabah menyetorkan hasil sampah yang telah dikumpulkan sebeleumnya. lalu selanjutnya admin akan melakukan penimbangan terhadap sampah yang telah disetorkan sebelumnya
-          </p>
-        </div>
-        <div>
-          <p class="text-2xl font-semibold text-gray-700 capitalize">konversi uang</p>
-          <hr class="w-full h-1 my-4 bg-gray-800 rounded-md">
-          <p class="text-xl text-gray-700 ">
-            Setelah itu nasabah akan mendapatkan informasi hasil saldo yang telah didapatkan. Saldo yang berhasil didapatkan dapat dilihat melalui website kami maupun aplikasi mobile yang telah didownload
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
 
   <section id="mitra" class="space-y-12">
-    <p class="px-4 text-4xl font-bold text-center capitalize">mitra kami</p>
-    <p class="px-4 text-lg text-center text-gray-700">
-      Kami telah dipercaya oleh banyak sekali orang dan sudah banyak yang bergabung menjadi member kami
-    </p>
-    <div class="grid grid-cols-1 gap-4 px-8 place-items-center sm:grid-cols-2 md:grid-cols-4" id="mitra_wraper">
-      <!-- <div class="flex p-8 sm:p-12 place-items-center">
-        <img src="<?= base_url("assets/images/icon-mitra/62e776b841aff.png") ?>" alt="">
+    <p class="px-4 text-4xl font-extrabold capitalize">Official Partner</p>
+    <div class="grid grid-cols-3 gap-2 sm:grind-cols-2">
+      <div class="relative h-20 p-4 rounded-lg" style="background-image: url('<?= base_url("assets/images/banksampahpedia/jakarta.png"); ?>'); background-size: cover;">
+        <p class="absolute top-0 bottom-0 left-0 right-0 flex items-center justify-center p-4 text-2xl font-bold ">Jakarta</p>
       </div>
-      <div class="flex p-8 sm:p-12 place-items-center">
-        <img src="<?= base_url("assets/images/icon-mitra/6298a8258537a.png") ?>" alt="">
+      <div class="relative h-20 p-4 rounded-lg" style="background-image: url('<?= base_url("assets/images/banksampahpedia/bandung.png"); ?>'); background-size: cover;">
+        <p class="absolute top-0 bottom-0 left-0 right-0 flex items-center justify-center p-4 text-2xl font-bold ">Bandung</p>
       </div>
-      <div class="flex p-8 sm:p-12 place-items-center">
-        <img src="<?= base_url("assets/images/icon-mitra/6298a7406d4a5.png") ?>" alt="">
+      <div class="relative h-20 p-4 rounded-lg" style="background-image: url('<?= base_url("assets/images/banksampahpedia/surabaya.png"); ?>'); background-size: cover;">
+        <p class="absolute top-0 bottom-0 left-0 right-0 flex items-center justify-center p-4 text-2xl font-bold ">Surabaya</p>
       </div>
-      <div class="flex p-8 sm:p-12 place-items-center">
-        <img src="<?= base_url("assets/images/icon-mitra/dinas-apalah-hwhw.png") ?>" alt="">
-      </div> -->
+      <div class="relative h-20 p-4 rounded-lg" style="background-image: url('<?= base_url("assets/images/banksampahpedia/padang.png"); ?>'); background-size: cover;">
+        <p class="absolute top-0 bottom-0 left-0 right-0 flex items-center justify-center p-4 text-2xl font-bold ">Padang</p>
+      </div>
+      <div class="relative h-20 p-4 rounded-lg" style="background-image: url('<?= base_url("assets/images/banksampahpedia/aceh.png"); ?>'); background-size: cover;">
+        <p class="absolute top-0 bottom-0 left-0 right-0 flex items-center justify-center p-4 text-2xl font-bold ">Aceh</p>
+      </div>
     </div>
+    <div class="max-w-sm p-6 mb-6 overflow-hidden bg-white shadow-md rounded-xl">
+      <img src="<?= base_url("assets/images/logos/banksampah-logo.png"); ?>" alt="Card Image" class="h-32 mb-4 ">
+      <div class="mb-2 text-xl font-semibold">Bank Sampah Budi Luhur</div>
+      <p class="text-gray-600">Bank Sampah Budi Luhur</p>
+    </div>
+
   </section>
 
-  <section id="newsletter" class="space-y-8">
-    <p class="px-4 text-4xl font-bold text-center capitalize">newsletter</p>
-    <p class="px-4 text-lg text-center text-gray-700">
-      Masukkan email untuk mendapatkan kabar terbaru
-    </p>
-    <div class="flex gap-4 place-content-center">
-      <input id="email" type="email" class="w-1/2 p-4 text-gray-600 border-2 border-green-400 rounded-md shadow-md outline-none focus:border-green-600 focus:shadow-xl">
-      <button id="newsbtn" class="px-8 py-2 text-white capitalize bg-green-500 rounded-lg shadow-md hover:bg-green-600 hover:shadow-xl">subscribe</button>
+  <section id="contact-us" class="space-y-8">
+    <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
+      <div class="p-4 m-4 space-y-8 rounded-lg shadow-lg">
+        <div class="flex gap-2 place-items-center place-content-between">
+          <input type="text" placeholder="Nama" class="w-2/3 h-12 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-green-500 ">
+          <input type="text" placeholder="Email" class="w-2/3 h-12 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-green-500">
+        </div>
+        <div>
+          <textarea placeholder="Your Message" class="w-full px-4 py-2 border border-gray-300 rounded-md resize-none h-36 focus:outline-none focus:ring focus:border-green-500"></textarea>
+        </div>
+      </div>
+      <div class="flex m-4 place-content-center place-items-center">
+        <div class="space-y-4">
+          <p class="text-5xl font-extrabold"><span class="text-green-300">Hubungi</span> Kami!</p>
+          <p>Jika anda perlu menghubungi kami melalui email, anda
+            dapat mengisi form ini</p>
+          <div class="flex gap-8 place-items-center">
+            <img src="<?= base_url("assets/images/banksampahpedia/facebook.png") ?>" alt="">
+            <img src="<?= base_url("assets/images/banksampahpedia/instagram.png") ?>" alt="">
+            <img src="<?= base_url("assets/images/banksampahpedia/youtube.png") ?>" alt="">
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
   <section id="footer">
 
     <footer class="bg-white">
-      <div class="w-full max-w-screen-2xl p-4 py-6 mx-auto lg:py-8">
+      <div class="w-full p-4 py-6 mx-auto max-w-screen-2xl lg:py-8">
         <div class="md:flex md:justify-between">
           <div class="mb-6 md:mb-0">
             <div class="flex flex-col gap-4 place-content-center place-items-center">
-              <img src="<?= base_url('assets/images/banksampah-logo.webp'); ?>" class="w-24" alt="Logo" />
-              <p class="self-center text-xl font-semibold whitespace-nowrap ">bank sampah dahlia</p>
-              <p class="text-center max-w-sm">Jl m Saidi RT 9 RW 01 Petukangan Selatan kec Pesanggrahan Jakarta Selatan 12270</p>
+              <img src="<?= base_url('assets/images/banksampahpedia/logo.png'); ?>" class="w-24" alt="Logo" />
+              <p class="self-center text-xl font-semibold capitalize whitespace-nowrap ">bank sampah pedia</p>
+
             </div>
           </div>
           <div class="grid grid-cols-2 gap-8 capitalize sm:gap-6 sm:grid-cols-3">
@@ -360,7 +262,7 @@
         <hr class="my-6 border-gray-200 sm:mx-auto lg:my-8" />
         <div class="sm:flex sm:items-center sm:justify-between">
           <span class="text-sm text-gray-500 sm:text-center">© 2023 <a href="https://flowbite.com/" class="hover:underline">
-              Bank Sampah Dahlia</a>. All Rights Reserved.
+              Bank Sampah Pedia</a>.
           </span>
           <div class="flex mt-4 space-x-6 sm:justify-center sm:mt-0">
             <a href="#" class="text-gray-500 hover:text-gray-900">
