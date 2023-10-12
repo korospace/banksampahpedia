@@ -22,7 +22,16 @@
 <script src="<?= base_url('assets/js/homepage.js'); ?>"></script>
 
 <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var navbarToggle = document.querySelector('[data-collapse-toggle="navbar-default"]');
+    var navbarMenu = document.getElementById('navbar-default');
+
+    navbarToggle.addEventListener('click', function() {
+      navbarMenu.classList.toggle('hidden');
+    });
+  });
 </script>
+
 <?= $this->endSection(); ?>
 
 <!-- Body -->
@@ -74,9 +83,9 @@
 </nav>
 
 <div class="mx-8 space-y-32 sm:mx-12">
-  <section id="beranda" class="w-full px-8 mt-8">
-    <div class="relative grid grid-cols-1 p-4 md:grid-cols-2 rounded-3xl" style="background-image: url('<?= base_url("assets/images/banksampahpedia/bg.png"); ?>'); background-size: cover; height: 300px;">
-      <div class="m-4 space-y-4">
+  <section id="beranda" class="flex mt-8 sm:px-8 place-content-center">
+    <div class="relative grid w-full grid-cols-1 p-4 bg-cover md:w-3/4 md:grid-cols-2 rounded-3xl h-3/4 place-content-center" style="background-image: url('<?= base_url("assets/images/banksampahpedia/bg.png"); ?>')">
+      <div class="m-4 space-y-6 ">
         <p class="flex text-5xl font-bold ">Bank Sampah Pedia</p>
         <p>
           Bank Sampah Pedia merupakan sebuah website berbayar yang berfungsi sebagai wadah manajemen Bank Sampah yang dapat digunakan oleh Bank Sampah di seluruh Indonesia.
@@ -85,7 +94,7 @@
           <a href="<?= base_url('register'); ?>" class="px-4 py-2 bg-green-700 rounded-xl text-green-50">Bergabung</a>
         </p>
       </div>
-      <div class="place-content-end">
+      <div class="flex place-content-end">
         <img src="<?= base_url("assets/images/banksampahpedia/banner.png") ?>" alt="">
       </div>
     </div>
@@ -93,7 +102,7 @@
   </section>
 
   <section id="program" class="space-y-12">
-    <div class="grid grid-cols-1 sm:grid-cols-2">
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
       <div>
         <p class="text-4xl font-extrabold text-center">Tujuan Kegiatan Bank Sampah Pedia</p>
         <img src="<?= base_url("assets/images/banksampahpedia/laptop.png") ?>" alt="">
