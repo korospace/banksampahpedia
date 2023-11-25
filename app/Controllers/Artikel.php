@@ -57,15 +57,16 @@ class Artikel extends BaseController
             $newFileName = uniqid().'.jpeg';
 
             $data = [
-                "id"          => $idBerita,
-                "title"       => strtolower(trim($data['title'])),
-                "slug"        => preg_replace('/ /i', '-',strtolower(trim($data['title']))),
+                "id"           => $idBerita,
+                "title"        => strtolower(trim($data['title'])),
+                "slug"         => preg_replace('/ /i', '-',strtolower(trim($data['title']))),
                 // "thumbnail"   => $this->base64Decode($_FILES['thumbnail']['tmp_name'],$_FILES['thumbnail']['type']),
-                "thumbnail"   => $newFileName,
-                "content"     => $data['content'],
-                "id_kategori" => trim($data['id_kategori']),
-                "created_at"  => (int)time(),
-                "published_at"=> (int)strtotime($data['published_at']),
+                "thumbnail"    => $newFileName,
+                "content"      => $data['content'],
+                "id_kategori"  => trim($data['id_kategori']),
+                "created_at"   => (int)time(),
+                "published_at" => (int)strtotime($data['published_at']),
+                "id_banksampah"=> $this->detil_banksampah($result['data']['token'])['id_banksampah']
             ];
 
             if ($file->move('assets/images/thumbnail-berita/',$newFileName)) {
@@ -113,13 +114,14 @@ class Artikel extends BaseController
         } 
         else {
             $data = [
-                "id"          => trim($data['id']),
-                "title"       => strtolower(trim($data['title'])),
-                "slug"        => preg_replace('/ /i', '-',strtolower(trim($data['title']))),
-                "content"     => trim($data['content']),
-                "id_kategori" => trim($data['id_kategori']),
-                "created_at"  => (int)time(),
-                "published_at"=> (int)strtotime($data['published_at'])
+                "id"           => trim($data['id']),
+                "title"        => strtolower(trim($data['title'])),
+                "slug"         => preg_replace('/ /i', '-',strtolower(trim($data['title']))),
+                "content"      => trim($data['content']),
+                "id_kategori"  => trim($data['id_kategori']),
+                "created_at"   => (int)time(),
+                "published_at" => (int)strtotime($data['published_at']),
+                "id_banksampah"=> $this->detil_banksampah($result['data']['token'])['id_banksampah']
             ];
 
             if ($this->request->getFile('new_thumbnail')) {
@@ -194,8 +196,9 @@ class Artikel extends BaseController
             return $this->respond($response,400);
         } 
         else {
+            $id_banksampah = $this->detil_banksampah($result['data']['token'])['id_banksampah'];    
             $old_thumbnail = $this->artikelModel->getOldThumbnail($this->request->getGet('id'));
-            $dbresponse    = $this->artikelModel->deleteArtikel($this->request->getGet('id'));
+            $dbresponse    = $this->artikelModel->deleteArtikel($this->request->getGet('id'),$id_banksampah);
 
             if ($dbresponse['error'] == false) {
                 // delete local thumbnail
@@ -209,13 +212,17 @@ class Artikel extends BaseController
     // get all artikel
     public function getArtikel(): object
     {
+        $result  = [];
         $isAdmin = false;
         if ($this->request->getHeader('token')) {
             $result     = $this->checkToken();
             $isAdmin    = (in_array($result['data']['privilege'],['admin','superadmin'])) ? true : false ;
         }
 
-        $dbResponse = $this->artikelModel->getArtikel($this->request->getGet(),$isAdmin);
+        $param_get = $this->request->getGet();
+        $param_get['id_banksampah'] = count($result) > 0 ? $this->detil_banksampah($result['data']['token'])['id_banksampah'] : null;
+
+        $dbResponse = $this->artikelModel->getArtikel($param_get,$isAdmin);
     
         return $this->respond($dbResponse,$dbResponse['status']);
     }
@@ -230,14 +237,16 @@ class Artikel extends BaseController
             $response = [
                 'status'   => 400,
                 'error'    => true,
-                'messages' => $errors['id'],
+                'messages' => $errors,
             ];
         
             return $this->respond($response,400);
         }
 
-        $slug       = ($this->request->getGet('slug'))?$this->request->getGet('slug'):'';
-        $dbResponse = $this->artikelModel->getRelatedArtikel($slug);
+        $slugBANKNAME = ($this->request->getGet('slugBANKNAME')) ? $this->request->getGet('slugBANKNAME') : '';
+        $slugTITLE    = ($this->request->getGet('slugTITLE')) ? $this->request->getGet('slugTITLE') : '';
+
+        $dbResponse = $this->artikelModel->getRelatedArtikel($slugBANKNAME, $slugTITLE);
     
         return $this->respond($dbResponse,$dbResponse['status']);
     }

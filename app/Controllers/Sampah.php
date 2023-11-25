@@ -58,6 +58,8 @@ class Sampah extends BaseController
                 "harga_pusat"   => trim($data['harga_pusat']),
             ];
 
+            $data['id_banksampah'] = $this->detil_banksampah($result['data']['token'])['id_banksampah'];    
+
             $dbresponse = $this->sampahModel->addSampah($data);
 
             return $this->respond($dbresponse,$dbresponse['status']);
@@ -95,6 +97,8 @@ class Sampah extends BaseController
                 "jumlah"        => $data['jumlah'],
             ];
 
+            $data['id_banksampah'] = $this->detil_banksampah($result['data']['token'])['id_banksampah'];    
+
             $dbresponse = $this->sampahModel->editSampah($data);
 
             return $this->respond($dbresponse,$dbresponse['status']);
@@ -117,7 +121,9 @@ class Sampah extends BaseController
             return $this->respond($response,400);
         } 
         else {
-            $dbresponse = $this->sampahModel->deleteSampah($this->request->getGet('id'));
+            $id_banksampah = $this->detil_banksampah($result['data']['token'])['id_banksampah'];    
+
+            $dbresponse = $this->sampahModel->deleteSampah($this->request->getGet('id'), $id_banksampah);
 
             return $this->respond($dbresponse,$dbresponse['status']);
         }
@@ -126,8 +132,8 @@ class Sampah extends BaseController
     // get sampah
     public function getSampah(): object
     {
-        $isAdmin    = false;
-        $dbResponse = $this->sampahModel->getSampah($this->request->getGet());
+        $result  = [];
+        $isAdmin = false;
 
         if ($this->request->getHeader('token')) {
             $result = $this->checkToken();
@@ -136,6 +142,11 @@ class Sampah extends BaseController
                 $isAdmin = true;
             }
         }
+        
+        $param_get = $this->request->getGet();
+        $param_get['id_banksampah'] = count($result) > 0 ? $this->detil_banksampah($result['data']['token'])['id_banksampah'] : null;
+
+        $dbResponse = $this->sampahModel->getSampah($param_get);
 
         if ($isAdmin == false && isset($dbResponse["data"])) {
             $dataBaru = [];

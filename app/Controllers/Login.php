@@ -72,7 +72,8 @@ class Login extends BaseController
             setcookie('token', null, -1, '/'); 
             unset($_COOKIE['token']);
 
-            return view('LoginPage/loginAdmin',$data);
+            // return view('LoginPage/loginAdmin',$data);
+            return redirect()->to(base_url().'/login');
         } 
         else {
             if ($privilege == 'nasabah') {
@@ -106,8 +107,17 @@ class Login extends BaseController
         else {
             $email         = $this->request->getPost("email");
             $nasabahData   = $this->loginModel->checkNasabah($email);
-            $database_pass = $this->decrypt($nasabahData['messages']['password']);
-            $sendEmail     = $this->sendPassToEmail($email,$database_pass);
+            $database_pass = "";
+
+            if ($nasabahData['status'] == 200) {
+                $database_pass = $this->decrypt($nasabahData['messages']['password']);
+            } 
+            else {
+                $adminData     = $this->loginModel->getAdminByUsername($email);
+                $database_pass = $this->decrypt($adminData['messages']['password']);
+            }
+
+            $sendEmail= $this->sendPassToEmail($email,$database_pass);
 
             $response = [
                 'status'   => ($sendEmail == true) ? 200   : 500,
@@ -244,14 +254,14 @@ class Login extends BaseController
         } 
         else {
             // get admin data from DB by username
-            $adminData  = $this->loginModel->getAdminByUsername($this->request->getPost("username"));
+            $adminData  = $this->loginModel->getAdminByUsername($this->request->getPost("username_or_email"));
 
             if ($adminData['error'] == false) {
                 $login_pass    = $this->request->getPost("password");
-                $database_pass = $adminData['messages']['password'];
+                $database_pass = $this->decrypt($adminData['messages']['password']);
 
                 // verify password
-                if (password_verify($login_pass,$database_pass)) {
+                if ($login_pass === $database_pass) {
 
                     // is admin active or not
                     $is_active   = $adminData['messages']['is_active'];

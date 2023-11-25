@@ -72,6 +72,30 @@ class RegisterModel extends Model
         }
     }
 
+    // INSERT New banksampah
+    public function addBanksampah(array $data): array
+    {
+        try {
+            $query = $this->db->table('banksampah')->insert($data);
+            $query = $query ? true : false;
+            
+            return [
+                'id_banksampah' => $this->db->insertID(),
+                'status'   => $query ? 201   : 500,
+                'error'    => $query ? false : true,
+                'messages' => $query ? "register success" : "register failed",
+            ];
+        } 
+        catch (Exception $e) {
+            $this->db->transRollback();
+            return [
+                'status'   => 500,
+                'error'    => true,
+                'messages' => $e->getMessage(),
+            ];
+        }
+    }
+
     // INSERT New nasabah
     public function addNasabah(array $data): array
     {
@@ -95,6 +119,7 @@ class RegisterModel extends Model
                 ];
             } 
             else {
+                // $this->db->transCommit(); // sudah di controller
                 return [
                     'status'   => 201,
                     "error"    => false,
@@ -116,14 +141,27 @@ class RegisterModel extends Model
     public function addAdmin(array $data): array
     {
         try {
-            $query = $this->db->table($this->table)->insert($data);
-            $query = $query ? true : false;
-            
-            return [
-                'status'   => $query ? 201   : 500,
-                'error'    => $query ? false : true,
-                'messages' => $query ? "register success" : "register failed",
-            ];
+            $this->db->transBegin();
+
+            $this->db->table($this->table)->insert($data);
+            $this->db->table("dompet")->insert(['id_banksampah' => $data['id_banksampah'],'uang' => 0]);
+
+            if ($this->db->transStatus() === false) {
+                $this->db->transRollback();
+                return [
+                    'status'   => 500,
+                    'error'    => true,
+                    'messages' => "register failed",
+                ];
+            } 
+            else {
+                $this->db->transCommit();
+                return [
+                    'status'   => 201,
+                    "error"    => false,
+                    'messages' => 'register success',
+                ];
+            }
         } 
         catch (Exception $e) {
             $this->db->transRollback();

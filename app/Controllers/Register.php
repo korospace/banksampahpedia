@@ -41,6 +41,94 @@ class Register extends BaseController
     }
 
     /**
+     * Bank Sampah Regsiter
+     *   url    : domain.com/register/nasabah
+     *   method : POST
+     */
+    public function banksampahRegister(): object
+    {
+        $data = $this->request->getPost();
+        $data['logo'] = $this->request->getFile('logo'); 
+
+        $this->validation->run($data,'banksampahRegisterValidate');
+        $errors = $this->validation->getErrors();
+        
+        if($errors) {
+            $response = [
+                'status'   => 400,
+                'error'    => true,
+                'messages' => $errors,
+            ];
+    
+            return $this->respond($response,400);
+        } 
+        else {
+            // create id admin
+            $idAdmin    = '';
+            $lastAdmin  = $this->registerModel->getLastAdmin();
+
+            if ($lastAdmin['status'] == 200) {
+                $lastID  = $lastAdmin['data']['id'];
+                $lastID  = (int)substr($lastID,1)+1;
+                $lastID  = sprintf('%03d',$lastID);
+                $idAdmin = 'A'.$lastID;
+            } 
+            else {
+                $idAdmin = 'A001';
+                // return $this->respond($lastAdmin,$lastAdmin['status']);
+            }
+
+            // mengisi data bank sampah
+            $res_create_banksampah = "";
+            $file        = $data['logo'];
+            $newFileName = uniqid().'.jpeg';
+
+            $data_banksampah = [
+                "name"        => strtolower(trim($data['nama_banksampah'])),
+                "slug"        => preg_replace('/ /i', '-',strtolower(trim($data['nama_banksampah']))),
+                "email"       => $data['email'],
+                "notelp"      => $data['notelp'],
+                "description" => $data['description'],
+                "address"     => $data['alamat'],
+                "logo"        => $newFileName,
+                "created_at"  => (int)time(),
+            ];
+
+            if ($file->move('assets/images/logo-banksampah/',$newFileName)) {
+                $res_create_banksampah = $this->registerModel->addBanksampah($data_banksampah);
+
+                if ($res_create_banksampah['error'] == true) {
+                    unlink('./assets/images/logo-banksampah/'.$newFileName);
+                    return $this->respond($res_create_banksampah,$res_create_banksampah['status']);
+                } 
+            }
+
+            // membuat akun admin
+            $data_admin = [
+                "id"           => $idAdmin,
+                "id_banksampah"=> $res_create_banksampah['id_banksampah'],
+                "email"        => $data['email'],
+                "username"     => trim($data['username']),
+                "password"     => $this->encrypt(trim($data['password'])),
+                "nama_lengkap" => "ADMIN 1 ".strtoupper(trim($data['nama_banksampah'])),
+                "nik"          => null,
+                "notelp"       => null,
+                "alamat"       => null,
+                "tgl_lahir"    => null,
+                "kelamin"      => null,
+                "is_active"    => true,
+                "last_active"  => null,
+                "created_at"   => (int)time(),
+                "privilege"    => 'superadmin',
+                "is_verify"    => true,
+            ];
+
+            $res_create_admin = $this->registerModel->addAdmin($data_admin);
+            return $this->respond($res_create_admin,$res_create_admin['status']);
+        }
+    }
+
+    /**
      * Nasabah Regsiter
      *   url    : domain.com/register/nasabah
      *   method : POST
@@ -131,15 +219,17 @@ class Register extends BaseController
                 if (in_array($result['data']['privilege'],['admin','superadmin'])) {
                     $data['email']     = null;
                     $data['is_verify'] = true;
-                    $data["username"] = trim($idNasabah);
-                    $data["password"] = $this->encrypt($idNasabah);
+                    $data["username"]  = trim($idNasabah);
+                    $data["password"]  = $this->encrypt($idNasabah);
+                    $data["id_banksampah"] = $this->detil_banksampah($result['data']['token'])['id_banksampah'];
                 }
             }
             else {
-                $email         = $this->request->getPost('email');
-                $data['email'] = $email;
+                $email            = $this->request->getPost('email');
+                $data['email']    = $email;
                 $data["username"] = trim($this->request->getPost('username'));
                 $data["password"] = $this->encrypt($this->request->getPost('password'));
+                $data["id_banksampah"] = $this->request->getPost('id_banksampah');
             }
 
             $dbrespond = $this->registerModel->addNasabah($data);
@@ -212,9 +302,10 @@ class Register extends BaseController
             
             $data = [
                 "id"           => $idAdmin,
+                'id_banksampah'=> $this->detil_banksampah($result['data']['token'])['id_banksampah'],
                 "email"        => null,
                 "username"     => trim($data['username']),
-                "password"     => password_hash(trim($data['password']), PASSWORD_DEFAULT),
+                "password"     => $this->encrypt(trim($data['password'])),
                 "nama_lengkap" => strtolower(trim($data['nama_lengkap'])),
                 "nik"          => null,
                 "notelp"       => $data['notelp'] ? trim($data['notelp']) : null,
@@ -226,7 +317,7 @@ class Register extends BaseController
                 "created_at"   => (int)time(),
                 "privilege"    => strtolower(trim($data['privilege'])),
                 "is_verify"    => true,
-            ];
+            ];    
 
             $dbrespond = $this->registerModel->addAdmin($data);
     

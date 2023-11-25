@@ -43,9 +43,10 @@ class Penghargaan extends BaseController
             $dbFileName  = $newFileName;
 
             $data = [
-                "icon"        => $dbFileName,
-                "name"        => trim($data['penghargaan_name']),
-                "description" => trim($data['description']),
+                "icon"         => $dbFileName,
+                "name"         => trim($data['penghargaan_name']),
+                "description"  => trim($data['description']),
+                "id_banksampah"=> $this->detil_banksampah($result['data']['token'])['id_banksampah']
             ];
 
             if ($file->move('assets/images/icon-penghargaan/',$newFileName)) {
@@ -73,7 +74,15 @@ class Penghargaan extends BaseController
     // get penghargaan
 	public function getPenghargaan(): object
     {
-        $dbresponse = $this->penghargaanModel->getPenghargaan();
+        $result = [];
+
+        if ($this->request->getHeader('token')) {
+            $result = $this->checkToken();
+        }
+
+        $id_banksampah = count($result) > 0 ? $this->detil_banksampah($result['data']['token'])['id_banksampah'] : null;
+
+        $dbresponse = $this->penghargaanModel->getPenghargaan($id_banksampah);
 
         return $this->respond($dbresponse,$dbresponse['status']);
     }
@@ -94,8 +103,9 @@ class Penghargaan extends BaseController
             return $this->respond($response,400);
         } 
         else {
-            $old_icon   = $this->penghargaanModel->getOldIcon($this->request->getGet('id'));
-            $dbresponse = $this->penghargaanModel->deletePenghargaan($this->request->getGet('id'));
+            $id_banksampah = $this->detil_banksampah($result['data']['token'])['id_banksampah'];    
+            $old_icon      = $this->penghargaanModel->getOldIcon($this->request->getGet('id'));
+            $dbresponse    = $this->penghargaanModel->deletePenghargaan($this->request->getGet('id'),$id_banksampah);
             
             if ($dbresponse['error'] == false) {
                 // delete local icon

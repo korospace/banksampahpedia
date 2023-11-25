@@ -74,7 +74,7 @@ class ArtikelModel extends Model
     public function editArtikel(array $data): array
     {
         try {
-            $this->db->table($this->table)->where('id',$data['id'])->update($data);
+            $this->db->table($this->table)->where('id',$data['id'])->where('id_banksampah',$data['id_banksampah'])->update($data);
             
             return [
                 'status'   => 201,
@@ -91,10 +91,10 @@ class ArtikelModel extends Model
         }
     }
 
-    public function deleteArtikel(string $id): array
+    public function deleteArtikel(string $id,$id_banksampah): array
     {
         try {
-            $this->db->table($this->table)->where('id', $id)->delete();
+            $this->db->table($this->table)->where('id', $id)->where('id_banksampah', $id_banksampah)->delete();
             $affectedRows = $this->db->affectedRows();
 
             return [
@@ -120,15 +120,25 @@ class ArtikelModel extends Model
             if (isset($get['id']) && !isset($get['kategori'])) {
                 $berita = $this->db->table($this->table)
                 ->select("artikel.id,artikel.title,artikel.slug,artikel.id_kategori,kategori_artikel.name AS kategori,artikel.published_at,artikel.created_at,artikel.thumbnail,artikel.content")
-                ->join('kategori_artikel', 'kategori_artikel.id = artikel.id_kategori')
-                ->where("artikel.id",$get['id'])->get()->getFirstRow();
+                ->join('kategori_artikel', 'kategori_artikel.id = artikel.id_kategori');
+
+                if ($get['id_banksampah'] != null) {
+                    $berita  = $berita->where('artikel.id_banksampah',$get['id_banksampah']);
+                }
+                
+                $berita = $berita->where("artikel.id",$get['id'])->get()->getFirstRow();
                 $berita = $this->modifImgPath($berita);
             } 
             else if (isset($get['slug']) && !isset($get['kategori'])) {
                 $berita = $this->db->table($this->table)
                 ->select("artikel.id,artikel.title,artikel.slug,artikel.id_kategori,kategori_artikel.name AS kategori,artikel.published_at,artikel.created_at,artikel.thumbnail,artikel.content")
-                ->join('kategori_artikel', 'kategori_artikel.id = artikel.id_kategori')
-                ->where("artikel.slug",$get['slug'])->get()->getFirstRow();
+                ->join('kategori_artikel', 'kategori_artikel.id = artikel.id_kategori');
+
+                if ($get['id_banksampah'] != null) {
+                    $berita  = $berita->where('artikel.id_banksampah',$get['id_banksampah']);
+                }
+
+                $berita = $berita->where("artikel.slug",$get['slug'])->get()->getFirstRow();
                 $berita = $this->modifImgPath($berita);
             } 
             else if (isset($get['kategori']) && !isset($get['id'])) {
@@ -140,7 +150,39 @@ class ArtikelModel extends Model
                     $berita = $berita->where("artikel.published_at <=",(int)time());
                 }
 
+                if ($get['id_banksampah'] != null) {
+                    $berita  = $berita->where('artikel.id_banksampah',$get['id_banksampah']);
+                }
+
                 $berita = $berita->orderBy('artikel.created_at',$orderby)->get()->getResultArray();
+                $berita = $this->modifImgPath($berita);
+            } 
+            else if (isset($get['slugBANKNAME']) && isset($get['slugKATEGORI'])) {
+                $berita = $this->db->table($this->table)->select('artikel.id,artikel.title,artikel.slug,kategori_artikel.name AS kategori,artikel.published_at,artikel.created_at,artikel.thumbnail')
+                ->join('kategori_artikel', 'kategori_artikel.id = artikel.id_kategori')
+                ->join('banksampah', 'kategori_artikel.id_banksampah = banksampah.id','left')
+                ->where("kategori_artikel.slug",$get['slugKATEGORI'])
+                ->where("banksampah.slug",$get['slugBANKNAME']);
+
+                if (!$isAdmin) {
+                    $berita = $berita->where("artikel.published_at <=",(int)time());
+                }
+
+                if ($get['id_banksampah'] != null) {
+                    $berita  = $berita->where('artikel.id_banksampah',$get['id_banksampah']);
+                }
+
+                $berita = $berita->orderBy('artikel.created_at',$orderby)->get()->getResultArray();
+                $berita = $this->modifImgPath($berita);
+            } 
+            else if (isset($get['slugBANKNAME']) && isset($get['slugTITLE'])) {
+                $berita = $this->db->table($this->table)
+                ->select("artikel.id,artikel.title,artikel.slug,artikel.id_kategori,kategori_artikel.name AS kategori,artikel.published_at,artikel.created_at,artikel.thumbnail,artikel.content")
+                ->join('kategori_artikel', 'kategori_artikel.id = artikel.id_kategori')
+                ->join('banksampah', 'kategori_artikel.id_banksampah = banksampah.id','left')
+                ->where("banksampah.slug",$get['slugBANKNAME']);
+
+                $berita = $berita->where("artikel.slug",$get['slugTITLE'])->get()->getFirstRow();
                 $berita = $this->modifImgPath($berita);
             } 
             else {
@@ -149,6 +191,10 @@ class ArtikelModel extends Model
 
                 if (!$isAdmin) {
                     $berita = $berita->where("artikel.published_at <=",(int)time());
+                }
+
+                if ($get['id_banksampah'] != null) {
+                    $berita  = $berita->where('artikel.id_banksampah',$get['id_banksampah']);
                 }
 
                 $berita = $berita->orderBy('artikel.created_at',$orderby);
@@ -185,22 +231,22 @@ class ArtikelModel extends Model
         }
     }
 
-    public function getRelatedArtikel(string $slug): array
+    public function getRelatedArtikel(string $slugBANKNAME, string $slugTITLE): array
     {
         try {
             $allBerita  = [];
-            $target     = $this->db->table($this->table)->select("id,id_kategori")->where("slug",$slug)->get()->getResultArray();
+            $target     = $this->db->table($this->table)->select("artikel.id,artikel.id_kategori")
+                ->join('banksampah', 'artikel.id_banksampah = banksampah.id','left')
+                ->where("banksampah.slug",$slugBANKNAME)
+                ->where("artikel.slug",$slugTITLE)
+                ->get()->getResultArray();
+
             $id         = $target[0]['id'];
             $idKategori = $target[0]['id_kategori'];
 
             $firstId   = $this->db->table($this->table)->select('id')->where("id_kategori",$idKategori)->limit(1)->orderBy('id','ASC')->get()->getResultArray()[0]['id'];
             $lastId    = $this->db->table($this->table)->select('id')->where("id_kategori",$idKategori)->limit(1)->orderBy('id','DESC')->get()->getResultArray()[0]['id'];
 
-            // var_dump($idKategori);
-            // var_dump($id);
-            // var_dump($firstId);
-            // var_dump($lastId);die;
-            
             $limitPrev  = 2;
             $prevBerita = $this->db->query("SELECT artikel.id,artikel.title,artikel.slug,kategori_artikel.name AS kategori,artikel.created_at,artikel.thumbnail 
             FROM artikel 

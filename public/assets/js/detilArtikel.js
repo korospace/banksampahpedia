@@ -14,23 +14,23 @@ $(window).scroll(function () {
 /**
  * Get Kategori Artikel
  */
-axios.get(`${APIURL}/artikel/getkategori`)
-.then(res => {
-    let elKategori = ''
-    res.data.data.forEach(e => {
-        elKategori += `<a class="dropdown-item py-3" href="${BASEURL}/homepage/${e.name}">${e.name}</a>`;
-    });
+// axios.get(`${APIURL}/artikel/getkategori`)
+// .then(res => {
+//     let elKategori = ''
+//     res.data.data.forEach(e => {
+//         elKategori += `<a class="dropdown-item py-3" href="${BASEURL}/homepage/${e.name}">${e.name}</a>`;
+//     });
 
-    $('.dropdown-menu').html(elKategori);
-})
-.catch(err => {
+//     $('.dropdown-menu').html(elKategori);
+// })
+// .catch(err => {
 
-});
+// });
 
 /**
  * Get Detail Artikel
  */
-axios.get(`${APIURL}/artikel/getartikel?slug=${SLUG}`)
+axios.get(`${APIURL}/artikel/getartikel?slugBANKNAME=${slugBANKNAME}&slugTITLE=${slugTITLE}`)
 .then(res => {
     let response  = res.data.data;
     let date      = new Date(parseInt(response.published_at) * 1000);
@@ -77,7 +77,7 @@ axios.get(`${APIURL}/artikel/getartikel?slug=${SLUG}`)
  * Get Other Items
  */
 let arrayBerita = [];
-axios.get(`${APIURL}/artikel/relatedartikel?slug=${SLUG}`)
+axios.get(`${APIURL}/artikel/relatedartikel?slugBANKNAME=${slugBANKNAME}&slugTITLE=${slugTITLE}`)
 .then(res => {
     let elBerita  = '';
     let allBerita = res.data.data;
@@ -88,7 +88,7 @@ axios.get(`${APIURL}/artikel/relatedartikel?slug=${SLUG}`)
         let newday       = newdate.toLocaleString("en-US",{day: "numeric"});
         let newmonth     = newdate.toLocaleString("en-US",{month: "long"});
         let newyear      = newdate.toLocaleString("en-US",{year: "numeric"});
-        elBerita += `<a id="single-post" href="${BASEURL}/artikel/${b.slug}" class="col-12 col-sm-6 col-lg-12 mb-4">
+        elBerita += `<a id="single-post" href="${BASEURL}/bank/${slugBANKNAME}/artikel/${slugKATEGORI}/baca/${b.slug}" class="col-12 col-sm-6 col-lg-12 mb-4">
                         <div class="image position-relative">
                             <img src="${BASEURL}/assets/images/skeleton-thumbnail.webp" alt="thumbnail" class="w-100 position-relative" style="z-index: 1;">
                             <img src="${b.thumbnail}" alt="thumbnail" class="w-100 h-100 position-absolute" style="z-index: 10;left:0;">

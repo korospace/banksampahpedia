@@ -40,11 +40,11 @@ class UserModel extends Model
         }
     }
 
-    public function totalAkun(): array
+    public function totalAkun(int $id_banksampah = null): array
     {
         try {
-            $akunAdmin   = $this->db->query("SELECT count(privilege) AS total FROM users WHERE privilege IN('admin','superadmin')")->getResultArray()[0];
-            $akunNasabah = $this->db->query("SELECT count(privilege) AS total FROM users WHERE privilege = 'nasabah'")->getResultArray()[0];
+            $akunAdmin   = $this->db->query("SELECT count(privilege) AS total FROM users WHERE privilege IN('admin','superadmin') AND id_banksampah = $id_banksampah")->getResultArray()[0];
+            $akunNasabah = $this->db->query("SELECT count(privilege) AS total FROM users WHERE privilege = 'nasabah' AND id_banksampah = $id_banksampah")->getResultArray()[0];
             
             $akun = [
                 'jml_admin'   => $akunAdmin['total'],
@@ -78,22 +78,26 @@ class UserModel extends Model
     public function getNasabah(array $get): array
     {
         try {
+            $id_banksampah = $get['id_banksampah'];
+
             $query  = "SELECT users.id,users.nama_lengkap,alamat,users.last_active,users.is_verify,users.created_at 
             FROM users
             JOIN wilayah ON (users.id = wilayah.id_user) 
-            WHERE users.privilege = 'nasabah'";
+            WHERE users.privilege = 'nasabah' AND users.id_banksampah = '$id_banksampah'";
 
             if (isset($get['id'])) {
                 $query  = "SELECT users.id,users.email,users.username,users.nama_lengkap,users.notelp,users.nik,users.alamat,users.tgl_lahir,users.kelamin,users.last_active,users.is_verify,users.created_at,dompet.uang
                 FROM users
                 JOIN dompet ON (users.id = dompet.id_user) 
                 WHERE users.privilege = 'nasabah' 
-                AND users.id = '".$get['id']."'";
+                AND users.id = '".$get['id']."'
+                AND users.id_banksampah = '$id_banksampah'";
             }
             else if (isset($get['key'])) {
                 $query  = "SELECT users.id,users.email,users.username,users.nama_lengkap,users.notelp,users.nik,users.alamat,users.tgl_lahir,users.kelamin,users.last_active,users.is_verify,users.created_at
                 FROM users
                 WHERE users.privilege = 'nasabah' 
+                AND users.id_banksampah = '$id_banksampah'
                 AND users.id = '".$get['key']."'
                 OR users.username = '".$get['key']."'
                 OR users.nama_lengkap = '".$get['key']."'";
@@ -155,17 +159,17 @@ class UserModel extends Model
         }
     }
 
-    public function getAdmin(?string $idadmin = null,string $currentIdAdmin): array
+    public function getAdmin(?string $idadmin = null,string $currentIdAdmin,$id_banksampah=false): array
     {
         try {
             if ($idadmin) {
-                $admin = $this->db->table($this->table)->select("id,username,nama_lengkap,alamat,notelp,tgl_lahir,kelamin,privilege,is_active")->where("id",$idadmin)->where("id !=",$currentIdAdmin)->get()->getFirstRow();
+                $admin = $this->db->table($this->table)->select("id,username,nama_lengkap,alamat,notelp,tgl_lahir,kelamin,privilege,is_active")->where("id_banksampah",$id_banksampah)->where("id",$idadmin)->where("id !=",$currentIdAdmin)->get()->getFirstRow();
             } 
             else {
                 // auto non active admin
                 $this->nonActiveAdmin();
 
-                $admin = $this->db->table($this->table)->select("id,username,nama_lengkap,privilege,is_active,last_active,created_at")->where("id !=",$currentIdAdmin)->whereIn('privilege',['admin','superadmin'])->orderBy('created_at','DESC')->get()->getResultArray();
+                $admin = $this->db->table($this->table)->select("id,username,nama_lengkap,privilege,is_active,last_active,created_at")->where("id_banksampah",$id_banksampah)->where("id !=",$currentIdAdmin)->whereIn('privilege',['admin','superadmin'])->orderBy('created_at','DESC')->get()->getResultArray();
             }
             
             if (empty($admin)) {    
@@ -208,10 +212,13 @@ class UserModel extends Model
     public function editUser(array $data): array
     {
         try {
-            $uang = $data['uang'];
-            unset($data['uang']);
+            $uang = 0;
+            if (isset($data['uang']) === true) {
+                $uang = $data['uang'];
+                unset($data['uang']);
+            }
 
-            $this->db->table($this->table)->where('id',$data['id'])->update($data);
+            $this->db->table($this->table)->where('id',$data['id'])->where('id_banksampah',$data['id_banksampah'])->update($data);
             $this->db->table('dompet')->where('id_user',$data['id'])->update(['uang' => $uang]);
             
             return [

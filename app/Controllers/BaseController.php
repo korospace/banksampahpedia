@@ -175,12 +175,12 @@ class BaseController extends ResourceController
             $mail->Port       = 465;
             $mail->SMTPAuth   = true;
             $mail->SMTPSecure = 'ssl';
-            $mail->Username   = 'sistembanksampahdahlia@gmail.com';
-            $mail->Password   = 'xhqnqmwqibspauej';
+            $mail->Username   = 'system.banksampahpedia@gmail.com';
+            $mail->Password   = 'gdommfqcfrsgpdgm';
             $mail->Subject    = 'code OTP';
-            $mail->Body       = "Terimakasih sudah bergabung bersama Bank Sampah Dahlia.<br>berikut adalah code OTP anda:<br><h1>$otp</h1>";
+            $mail->Body       = "Terimakasih sudah bergabung bersama Bank Sampah Pedia.<br>berikut adalah code OTP anda:<br><h1>$otp</h1>";
 
-            $mail->setFrom('sistembanksampahdahlia@gmail.com', 'Bank Sampah Dahlia');
+            $mail->setFrom('system.banksampahpedia@gmail.com', 'Bank Sampah Pedia');
             $mail->addAddress($email);
             $mail->isHTML(true);
 
@@ -206,12 +206,12 @@ class BaseController extends ResourceController
             $mail->Port       = 465;
             $mail->SMTPAuth   = true;
             $mail->SMTPSecure = 'ssl';
-            $mail->Username   = 'sistembanksampahdahlia@gmail.com';
-            $mail->Password   = 'xhqnqmwqibspauej';
+            $mail->Username   = 'system.banksampahpedia@gmail.com';
+            $mail->Password   = 'gdommfqcfrsgpdgm';
             $mail->Subject    = 'Lupa Password';
             $mail->Body       = "<u>password anda:</u><h1>$password</h1>";
 
-            $mail->setFrom('sistembanksampahdahlia@gmail.com', 'Bank Sampah Dahlia');
+            $mail->setFrom('system.banksampahpedia@gmail.com', 'Bank Sampah Pedia');
             $mail->addAddress($userEmail);
             $mail->isHTML(true);
 
@@ -237,15 +237,15 @@ class BaseController extends ResourceController
             $mail->Port       = 465;
             $mail->SMTPAuth   = true;
             $mail->SMTPSecure = 'ssl';
-            $mail->Username   = 'sistembanksampahdahlia@gmail.com';
-            $mail->Password   = 'xhqnqmwqibspauej';
+            $mail->Username   = 'system.banksampahpedia@gmail.com';
+            $mail->Password   = 'gdommfqcfrsgpdgm';
             $mail->Subject    = 'Kritik Dan Saran';
             $mail->Body       = "<p>name  : $userName</p>
             <p>email : $userEmail</p><br>
             <p><b><u>kriti dan saran:</u></b></p>$message";
 
             $mail->setFrom($userEmail,$userName);
-            $mail->addAddress('sistembanksampahdahlia@gmail.com','Banksampah Dahlia');
+            $mail->addAddress('system.banksampahpedia@gmail.com','Bank Sampah Pedia');
             $mail->addReplyTo($userEmail,$userName);
             $mail->isHTML(true);
 
@@ -343,6 +343,7 @@ class BaseController extends ResourceController
                     'error'   => false,
                     'status'  => 200,
                     'data'    => [
+                        'token'     => $token,
                         'userid'    => $decoded['id'],
                         'password'  => $decoded['password'],
                         'privilege' => $decoded['privilege'],
@@ -359,6 +360,7 @@ class BaseController extends ResourceController
                         'error'   => false,
                         'status'  => 200,
                         'data'    => [
+                            'token'     => $token,
                             'userid'    => $decoded['id'],
                             'password'  => $decoded['password'],
                             'privilege' => $decoded['privilege'],
@@ -399,6 +401,41 @@ class BaseController extends ResourceController
             }
 
             self::httpResponse($response);
+        }
+    }
+
+    /**
+     * Logo & Title
+     */
+    public function detil_banksampah($token)
+    {
+        if ($token == null) {
+            return [
+
+            ];
+        }
+        else {
+            $key       = $this->getKey();
+            $decoded   = JWT::decode($token, $key, array("HS256"));
+            $decoded   = (array)$decoded;
+    
+            $dbConnect = \Config\Database::connect();
+            $data_user = $dbConnect->table('users')->select('id_banksampah')->where("id", $decoded['id'])->get()->getResultArray();
+    
+            $id_banksampah   = !empty($data_user) ? $data_user[0]['id_banksampah'] : null;
+            $data_banksampah = $dbConnect->table('banksampah')->select('name,logo')->where("id", $id_banksampah)->get()->getResultArray();
+    
+            if (!empty($data_banksampah)) {
+                return [
+                    'id_banksampah' => $id_banksampah,
+                    'brand'         => 'Bank Sampah Pedia',
+                    'name'          => $data_banksampah[0]['name'],
+                    'logo'          => base_url()."/assets/images/logo-banksampah/".$data_banksampah[0]['logo'],
+                ];
+            }
+            else {
+                return [];
+            }
         }
     }
 

@@ -57,30 +57,8 @@ deploy
 
 ===============================================================================================
 
-1- file admin.transaksi.js
-    - line 324 elInputHarga.value = parseFloat(parseFloat(jumlahKg)*parseInt(harga)).toFixed(2);
-    - line 1055-1086
-
-2- database table setor_sampah jumlah_rp jadi decimal(11,2)
-
-3- database table dompet uang jadi decimal(11,2)
-
-4- controller transaksi.php
-    - line 93 Rp ".number_format($key['jumlah_rp'] , 2, '.', ',')."
-    - line 122 Rp ".number_format($totalRp , 2, '.', ',')."
-    - line 389 $totUangSetor = $totUangSetor+(float)$key['jumlah_rp'];
-    - line 419 Rp ".number_format($key['jumlah_rp'] , 2, '.', ',')."
-    - line 432 Rp ".number_format($totalRp , 2, '.', ',')."
-    - line 446-496
-
-5- database table jual_sampah
-    - harga_nasabah jadi decimal(11,2)
-    - jumlah_rp jadi decimal(11,2)
-
-6- hilangkan Rp di list cetak detil transaksi dan ubah ke text-right
-7- gunakan modal-lg saat pejualan sampah line 986 dan 990
-8- sorting jenis sampah line 265 admin.transaksi.js
-
+1- ubah mekanisme encryp pada edit profile admin ,list admin dan semua aksi yang ada popup confimr password
+2- menambahkan double is_unique pada validasi email, cek ke tabel user dan banksampah
 
 - git clone dalam htdocs xampp 7.5
 - buat database dengan nama db_bsdahliah

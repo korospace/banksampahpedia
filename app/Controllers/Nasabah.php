@@ -27,6 +27,7 @@ class Nasabah extends BaseController
             'title'     => 'Nasabah | dashboard',
             'token'     => $token,
             'privilege' => (isset($result['data']['privilege'])) ? $result['data']['privilege'] : null,
+            'detil_banksampah' => $this->detil_banksampah($token),
         ];
 
         if ($result['success'] == false) {
@@ -56,6 +57,7 @@ class Nasabah extends BaseController
             'title'     => 'Nasabah | profile',
             'token'     => $token,
             'privilege' => (isset($result['data']['privilege'])) ? $result['data']['privilege'] : null,
+            'detil_banksampah' => $this->detil_banksampah($token),
         ];
 
         if ($result['success'] == false) {

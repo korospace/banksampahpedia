@@ -43,9 +43,10 @@ class Mitra extends BaseController
             $dbFileName  = $newFileName;
 
             $data = [
-                "icon"        => $dbFileName,
-                "name"        => trim($data['mitra_name']),
-                "description" => trim($data['description']),
+                "icon"         => $dbFileName,
+                "name"         => trim($data['mitra_name']),
+                "description"  => trim($data['description']),
+                "id_banksampah"=> $this->detil_banksampah($result['data']['token'])['id_banksampah']
             ];
 
             if ($file->move('assets/images/icon-mitra/',$newFileName)) {
@@ -73,7 +74,15 @@ class Mitra extends BaseController
     // get mitra
 	public function getMitra(): object
     {
-        $dbresponse = $this->mitraModel->getMitra();
+        $result = [];
+
+        if ($this->request->getHeader('token')) {
+            $result = $this->checkToken();
+        }
+
+        $id_banksampah = count($result) > 0 ? $this->detil_banksampah($result['data']['token'])['id_banksampah'] : null;
+
+        $dbresponse = $this->mitraModel->getMitra($id_banksampah);
 
         return $this->respond($dbresponse,$dbresponse['status']);
     }
@@ -94,8 +103,9 @@ class Mitra extends BaseController
             return $this->respond($response,400);
         } 
         else {
-            $old_icon   = $this->mitraModel->getOldIcon($this->request->getGet('id'));
-            $dbresponse = $this->mitraModel->deleteMitra($this->request->getGet('id'));
+            $id_banksampah = $this->detil_banksampah($result['data']['token'])['id_banksampah'];    
+            $old_icon      = $this->mitraModel->getOldIcon($this->request->getGet('id'));
+            $dbresponse    = $this->mitraModel->deleteMitra($this->request->getGet('id'),$id_banksampah);
             
             if ($dbresponse['error'] == false) {
                 // delete local icon

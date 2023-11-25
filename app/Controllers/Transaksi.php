@@ -31,6 +31,7 @@ class Transaksi extends BaseController
 
         $result    = $this->checkToken($token, false);
         $privilege = (isset($result['data']['privilege'])) ? $result['data']['privilege'] : null;
+        $detil_banksampah = $this->detil_banksampah($result['data']['token']);
 
         if ($token == null || $result['success'] == false || !in_array($privilege,['nasabah','admin','superadmin'])) {
             setcookie('token', null, -1, '/');
@@ -237,7 +238,7 @@ class Transaksi extends BaseController
                 <table border='0' width='100%'>
                    <tr>
                         <th style='text-align: left;'>
-                            <img src='".base_url()."/assets/images/banksampah-logo.png' style='width: 100px;'>
+                            <img src='".$detil_banksampah['logo']."' style='width: 100px;'>
                         </th>
                         <th style='text-align: right;'>
                             <h1 style='font-size: 2em;'>
@@ -305,6 +306,7 @@ class Transaksi extends BaseController
         $token     = (isset($_COOKIE['token'])) ? $_COOKIE['token'] : null;
         $result    = $this->checkToken($token, false);
         $privilege = (isset($result['data']['privilege'])) ? $result['data']['privilege'] : null;
+        $detil_banksampah = $this->detil_banksampah($result['data']['token']);
 
         if ($token == null || $result['success'] == false || !in_array($privilege,['superadmin','admin'])) {
             setcookie('token', null, -1, '/');
@@ -399,7 +401,7 @@ class Transaksi extends BaseController
         $get = $this->request->getGet();
         $get['jenis'] = $jenis;
         
-        $dbresponse = $transaksiModel->rekapData($get);
+        $dbresponse = $transaksiModel->rekapData($get, $detil_banksampah['id_banksampah']);
         $data       = $dbresponse["data"];
         
         if (isset($get['idnasabah'])) {
@@ -675,7 +677,7 @@ class Transaksi extends BaseController
                 <table border='0' width='100%'>
                    <tr>
                         <th style='text-align: left;'>
-                            <img src='".base_url()."/assets/images/banksampah-logo.png' style='width: 100px;'>
+                            <img src='".$detil_banksampah['logo']."' style='width: 100px;'>
                         </th>
                         <th style='text-align: right;'>
                             <h1  style='font-size: 2em;'>
@@ -765,6 +767,7 @@ class Transaksi extends BaseController
         $token     = (isset($_COOKIE['token'])) ? $_COOKIE['token'] : null;
         $result    = $this->checkToken($token, false);
         $privilege = (isset($result['data']['privilege'])) ? $result['data']['privilege'] : null;
+        $detil_banksampah = $this->detil_banksampah($result['data']['token']);
 
         if ($token == null || $result['success'] == false || !in_array($privilege,['superadmin','admin'])) {
             setcookie('token', null, -1, '/');
@@ -850,7 +853,7 @@ class Transaksi extends BaseController
             }
         }
         
-        $dbresponse = $transaksiModel->rekapData($get);
+        $dbresponse = $transaksiModel->rekapData($get, $detil_banksampah['id_banksampah']);
         $data       = $dbresponse["data"];
 
         /*
@@ -946,7 +949,7 @@ class Transaksi extends BaseController
                 <table border='0' width='100%'>
                    <tr>
                         <th style='text-align: left;'>
-                            <img src='".base_url()."/assets/images/banksampah-logo.png' style='width: 100px;'>
+                            <img src='".$detil_banksampah['logo']."' style='width: 100px;'>
                         </th>
                         <th style='text-align: right;'>
                             <h1  style='font-size: 2em;'>
@@ -996,6 +999,7 @@ class Transaksi extends BaseController
         $token     = (isset($_COOKIE['token'])) ? $_COOKIE['token'] : null;
         $result    = $this->checkToken($token, false);
         $privilege = (isset($result['data']['privilege'])) ? $result['data']['privilege'] : null;
+        $detil_banksampah = $this->detil_banksampah($result['data']['token']);
 
         if ($token == null || $result['success'] == false || !in_array($privilege,['superadmin','admin'])) {
             setcookie('token', null, -1, '/');
@@ -1090,7 +1094,7 @@ class Transaksi extends BaseController
         $get = $this->request->getGet();
         $get['jenis'] = $jenis;
         
-        $dbresponse = $transaksiModel->rekapData($get);
+        $dbresponse = $transaksiModel->rekapData($get, $detil_banksampah['id_banksampah']);
         $data       = $dbresponse["data"];
 
         /*
@@ -1200,7 +1204,7 @@ class Transaksi extends BaseController
                 <table border='0' width='100%'>
                    <tr>
                         <th style='text-align: left;'>
-                            <img src='".base_url()."/assets/images/banksampah-logo.png' style='width: 100px;'>
+                            <img src='".$detil_banksampah['logo']."' style='width: 100px;'>
                         </th>
                         <th style='text-align: right;'>
                             <h1  style='font-size: 2em;'>
@@ -1266,6 +1270,7 @@ class Transaksi extends BaseController
         $token     = (isset($_COOKIE['token'])) ? $_COOKIE['token'] : null;
         $result    = $this->checkToken($token, false);
         $privilege = (isset($result['data']['privilege'])) ? $result['data']['privilege'] : null;
+        $detil_banksampah = $this->detil_banksampah($result['data']['token']);
 
         if ($token == null || $result['success'] == false || !in_array($privilege,['superadmin','admin'])) {
             setcookie('token', null, -1, '/');
@@ -1392,7 +1397,7 @@ class Transaksi extends BaseController
                 <table border='0' width='100%'>
                    <tr>
                         <th style='text-align: left;'>
-                            <img src='".base_url()."/assets/images/banksampah-logo.png' style='width: 100px;'>
+                            <img src='".$detil_banksampah['logo']."' style='width: 100px;'>
                         </th>
                         <th style='text-align: right;'>
                             <h1  style='font-size: 2em;'>
@@ -1640,7 +1645,8 @@ class Transaksi extends BaseController
         $result = $this->checkToken();
         $this->checkPrivilege($result['data']['privilege'],['admin','superadmin']);
 
-        $data  = $this->request->getPost();
+        $data = $this->request->getPost();
+        $data['id_banksampah'] = $this->detil_banksampah($result['data']['token'])['id_banksampah'];
 
         $this->validation->run($data,'jualSampah1');
         $errors = $this->validation->getErrors();
@@ -1699,7 +1705,13 @@ class Transaksi extends BaseController
             }
         }
 
-        $dbresponse = $this->transaksiModel->getSampahMasuk($this->request->getGet(),$idNasabah);
+        $param_get = $this->request->getGet();
+
+        if (isset($param_get['id_banksampah']) == false) {
+            $param_get['id_banksampah'] = count($result) > 0 ? $this->detil_banksampah($result['data']['token'])['id_banksampah'] : null;
+        }
+
+        $dbresponse = $this->transaksiModel->getSampahMasuk($param_get,$idNasabah);
 
         return $this->respond($dbresponse,$dbresponse['status']);
     }
@@ -1714,6 +1726,7 @@ class Transaksi extends BaseController
         $result     = $this->checkToken();
         $isAdmin    = (in_array($result['data']['privilege'],['admin','superadmin'])) ? true : false ;
         $idNasabah  = ($isAdmin==false) ? $result['data']['userid'] : '' ;
+        $id_banksampah = $this->detil_banksampah($result['data']['token'])['id_banksampah'];
 
         if ($isAdmin) {
             if ($this->request->getGet('idnasabah')) {
@@ -1721,7 +1734,7 @@ class Transaksi extends BaseController
             }
         }
 
-        $dbresponse = $this->transaksiModel->getAllJenisSaldo($idNasabah);
+        $dbresponse = $this->transaksiModel->getAllJenisSaldo($idNasabah, $id_banksampah);
 
         return $this->respond($dbresponse,$dbresponse['status']);
     }
@@ -1736,6 +1749,7 @@ class Transaksi extends BaseController
         $result    = $this->checkToken();
         $isAdmin   = (in_array($result['data']['privilege'],['admin','superadmin'])) ? true : false ;
         $idNasabah = ($isAdmin==false) ? $result['data']['userid'] : '' ;
+        $id_banksampah = $this->detil_banksampah($result['data']['token'])['id_banksampah'];
 
         if ($this->request->getGet('start') && $this->request->getGet('end')) {
             $this->validation->run($this->request->getGet(),'dateForFilterTransaksi');
@@ -1758,7 +1772,7 @@ class Transaksi extends BaseController
             }
         }
 
-        $dbresponse = $this->transaksiModel->getData($this->request->getGet(),$idNasabah);
+        $dbresponse = $this->transaksiModel->getData($this->request->getGet(),$idNasabah,$id_banksampah);
 
         return $this->respond($dbresponse,$dbresponse['status']);
     }
@@ -1772,6 +1786,7 @@ class Transaksi extends BaseController
     {
         $result = $this->checkToken();
         $this->checkPrivilege($result['data']['privilege'],['admin','superadmin']);
+        $id_banksampah = $this->detil_banksampah($result['data']['token'])['id_banksampah'];
 
         $errors = null;
         if ($this->request->getGet('year')) {
@@ -1795,7 +1810,7 @@ class Transaksi extends BaseController
             return $this->respond($response,400);
         } 
         
-        $dbresponse = $this->transaksiModel->rekapData($this->request->getGet());
+        $dbresponse = $this->transaksiModel->rekapData($this->request->getGet(), $id_banksampah);
 
         return $this->respond($dbresponse,$dbresponse['status']);
     }
@@ -1812,6 +1827,7 @@ class Transaksi extends BaseController
 
         $errors = null;
         $get    = $this->request->getGet();
+        $get['id_banksampah'] = $this->detil_banksampah($result['data']['token'])['id_banksampah'];
 
         if ($this->request->getGet('year')) {
             $this->validation->run($get,'rekapDataYear');

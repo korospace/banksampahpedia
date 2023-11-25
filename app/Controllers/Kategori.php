@@ -20,7 +20,7 @@ class Kategori extends BaseController
         $result = $this->checkToken();
         $this->checkPrivilege($result['data']['privilege'],['admin','superadmin']);
 
-        $data   = $this->request->getPost(); 
+        $data = $this->request->getPost(); 
 
         if ($tableName == 'kategori_sampah') {
             $this->validation->run($data,'kategoriSampahValidate');
@@ -68,6 +68,8 @@ class Kategori extends BaseController
                     "created_at" => (int)time(),
                 ];
 
+                $data['id_banksampah'] = $this->detil_banksampah($result['data']['token'])['id_banksampah'];
+
                 $dbresponse = $this->kategoriModel->addKategori($data,$tableName);
                 return $this->respond($dbresponse,$dbresponse['status']);
             } 
@@ -81,13 +83,16 @@ class Kategori extends BaseController
                     "id"             => $idKategori,
                     "icon"           => $dbFileName,
                     "name"           => trim($data['kategori_name']),
+                    'slug'           => preg_replace('/ /i', '-',strtolower(trim($data['kategori_name']))),
                     "description"    => trim($data['description']),
                     "kategori_utama" => (trim($data['kategori_utama']) == '1') ? true : false,
                     "created_at"     => (int)time(),
                 ];
 
+                $data['id_banksampah'] = $this->detil_banksampah($result['data']['token'])['id_banksampah'];    
+
                 if ($data['kategori_utama'] == true) {
-                    $totKategoriUtama = $this->kategoriModel->countKategoriUtama();
+                    $totKategoriUtama = $this->kategoriModel->countKategoriUtama($data['id_banksampah']);
 
                     if((int)$totKategoriUtama > 2){
                         $response = [
@@ -149,9 +154,12 @@ class Kategori extends BaseController
             $data = [
                 "id"             => $data['id'],
                 "name"           => trim($data['kategori_name']),
+                'slug'           => preg_replace('/ /i', '-',strtolower(trim($data['kategori_name']))),
                 "description"    => trim($data['description']),
                 "kategori_utama" => (trim($data['kategori_utama']) == '1') ? true : false,
             ];
+
+            $data['id_banksampah'] = $this->detil_banksampah($result['data']['token'])['id_banksampah'];    
             
             if ($data['kategori_utama'] == true && $dataInDb['kategori_utama'] == '0') {
                 $totKategoriUtama = $this->kategoriModel->countKategoriUtama();
@@ -245,7 +253,9 @@ class Kategori extends BaseController
                 $old_icon = $this->kategoriModel->getOldIcon($this->request->getGet('id'));
             }
 
-            $dbresponse = $this->kategoriModel->deleteKategori($this->request->getGet('id'),$tableName);
+            $id_banksampah = $this->detil_banksampah($result['data']['token'])['id_banksampah'];    
+
+            $dbresponse = $this->kategoriModel->deleteKategori($this->request->getGet('id'),$tableName,$id_banksampah);
             
             if ($tableName == 'kategori_artikel') {
                 if ($dbresponse['error'] == false) {
@@ -261,7 +271,10 @@ class Kategori extends BaseController
     // get kategori
 	public function getkategori(string $tableName): object
     {
-        $dbresponse = $this->kategoriModel->getKategori($tableName);
+        $token = (isset($_COOKIE['token'])) ? $_COOKIE['token'] : null;
+        $param_get['id_banksampah'] = count($this->detil_banksampah($token)) > 0 ? $this->detil_banksampah($token)['id_banksampah'] : null;
+
+        $dbresponse = $this->kategoriModel->getKategori($tableName,$param_get);
 
         return $this->respond($dbresponse,$dbresponse['status']);
     }

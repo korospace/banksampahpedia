@@ -175,6 +175,73 @@ class Validation
      * REGSITER VALIDATE
      * ================================
      */
+    // banksampah
+	public $banksampahRegisterValidate = [
+        'logo' => [
+            'rules'  => 'uploaded[logo]|max_size[logo,2000]|mime_in[logo,image/png,image/jpg,image/jpeg,image/webp]',
+            'errors' => [
+                'uploaded' => 'logo is required',
+                'max_size' => 'max size is 2mb',
+                'mime_in'  => 'your file is not in format(png/jpg/jpeg/webp)',
+            ],
+        ],
+		'email' => [
+            'rules'  => 'required|is_unique[banksampah.email]|is_unique[users.email]|valid_email',
+            'errors' => [
+                'required'     => 'email is required',
+                'is_unique'    => 'email sudah terdaftar',
+                'valid_email'  => 'Email is not in format',
+            ],
+		],
+		'username' => [
+            'rules'  => 'required|min_length[8]|max_length[20]|is_unique[users.username]',
+            'errors' => [
+                'required'    => 'username is required',
+                'min_length'  => 'min 8 character',
+                'max_length'  => 'max 20 character',
+                'is_unique'   => 'username sudah terdaftar',
+            ],
+		],
+		'password' => [
+            'rules'  => 'required|min_length[8]|max_length[20]',
+            'errors' => [
+                'required'    => 'password is required',
+                'min_length'  => 'min 8 character',
+                'max_length'  => 'max 20 character',
+            ],
+		],
+		'nama_banksampah' => [
+            'rules'  => 'required|max_length[40]|is_unique[banksampah.name]',
+            'errors' => [
+                'required'    => 'nama bank sampah is required',
+                'is_unique'   => 'nama ini sudah digunakan',
+                'max_length'  => 'max 40 character',
+            ],
+		],
+		'notelp' => [
+            'rules'  => 'required|max_length[14]|is_unique[banksampah.notelp]|is_natural',
+            'errors' => [
+                'required'    => 'nomor telepon is required',
+                'max_length'  => 'max 14 character',
+                'is_unique'   => 'no.telp sudah dipakai',
+                'is_natural'  => 'only number allowed',
+            ],
+		],
+		'alamat' => [
+            'rules'  => 'required|max_length[255]',
+            'errors' => [
+                'required'    => 'alamat is required',
+                'max_length'  => 'max 255 character',
+            ],
+		],
+        'description' => [
+            'rules'  => 'required',
+            'errors' => [
+                'required' => 'description is required',
+            ],
+		]
+	];
+
     // nasabah
 	public $nasabahRegisterValidate = [
 		'email' => [
@@ -336,10 +403,11 @@ class Validation
             ],
 		],
 		'uang' => [
-            'rules'  => 'max_length[11]|decimal',
+            'rules'  => 'max_length[11]',
+            // 'rules'  => 'max_length[11]|decimal',
             'errors' => [
                 'max_length'  => 'max 11 character',
-                'decimal'  => 'number allowed',
+                // 'decimal'  => 'number allowed',
             ],
 		],
 		'kelamin' => [
@@ -488,10 +556,10 @@ class Validation
 
     // admin
     public $adminLoginValidate = [
-		'username' => [
+		'username_or_email' => [
             'rules'  => 'required',
             'errors' => [
-                'required' => 'username is required',
+                'required' => 'username_or_email is required',
             ],
 		],
 		'password' => [
@@ -933,9 +1001,9 @@ class Validation
     // new thumbnail
 	public $newIconKategoriArtikel = [
         'icon' => [
-            'rules'  => 'max_size[icon,200]|mime_in[icon,image/png,image/jpg,image/jpeg,image/webp]',
+            'rules'  => 'max_size[icon,2000]|mime_in[icon,image/png,image/jpg,image/jpeg,image/webp]',
             'errors' => [
-                'max_size' => 'max size is 200kb',
+                'max_size' => 'max size is 2mb',
                 'mime_in'  => 'your file is not in format(png/jpg/jpeg/webp)',
             ],
         ],
@@ -1020,7 +1088,7 @@ class Validation
 	];
 
     public $getRelatedArtikel = [
-		'slug' => [
+		'slugTITLE' => [
             'rules'  => 'required|is_not_unique[artikel.slug]',
             'errors' => [
                 'required'      => 'slug is required',

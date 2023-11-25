@@ -15,7 +15,7 @@ class LoginModel extends Model
     public function checkNasabah(string $username_or_email): array
     {
         try {
-            $dataNasabah = $this->db->table($this->table)->select("id,email,password,is_verify,privilege")->where("email='$username_or_email' OR username='$username_or_email' AND privilege='nasabah'")->get()->getResultArray();
+            $dataNasabah = $this->db->table($this->table)->select("id,email,password,is_verify,privilege")->where("email='$username_or_email' AND privilege='nasabah' OR username='$username_or_email' AND privilege='nasabah'")->get()->getResultArray();
             
             return [
                 'status'   => (empty($dataNasabah)) ? 404  : 200,
@@ -33,15 +33,15 @@ class LoginModel extends Model
     }
 
     // get data admin by username
-    public function getAdminByUsername(string $username): array
+    public function getAdminByUsername(string $username_or_email): array
     {
         try {
-            $dataAdmin = $this->db->table($this->table)->select("id,password,privilege,is_active,last_active")->where("username",$username)->where("privilege!=",'nasabah')->get()->getResultArray();
+            $dataAdmin = $this->db->table($this->table)->select("id,password,privilege,is_active,last_active")->where("email='$username_or_email' AND privilege!='nasabah' OR username='$username_or_email' AND privilege!='nasabah'")->get()->getResultArray();
 
             return [
                 'status'   => (empty($dataAdmin)) ? 404  : 200,
                 'error'    => (empty($dataAdmin)) ? true : false,
-                'messages' => (empty($dataAdmin)) ? ['username' => "username notfound"] : $dataAdmin[0],
+                'messages' => (empty($dataAdmin)) ? ['username_or_email' => "username/email notfound"] : $dataAdmin[0],
             ];
         } 
         catch (Exception $e) {

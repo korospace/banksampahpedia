@@ -392,7 +392,7 @@
 								© <script>
 									document.write(new Date().getFullYear())
 								</script>,
-								Bank Sampah Budi Luhur
+								<?= $detil_banksampah['brand'] ?>
 							</div>
 						</div>
 					</div>
@@ -497,7 +497,7 @@
 					</div>
 					<!-- header -->
 					<div class="detil-transaksi-logo d-flex align-items-center justify-content-between py-2 px-4">
-						<img src="<?= base_url('assets/images/banksampah-logo.png');?>" />
+						<img src="<?= $detil_banksampah['logo'] ?>" />
 						<h4>bukti transaksi</h4>
 					</div>
 					<hr class="horizontal dark mt-2">

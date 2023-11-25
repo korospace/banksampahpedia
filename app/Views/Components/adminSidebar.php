@@ -31,8 +31,8 @@
   style="font-family: 'qc-semibold';">
     <div class="sidenav-header position-sticky bg-white" style="top: 0;z-index: 20">
         <span class="navbar-brand mt-3" target="_blank">
-            <img src="<?= base_url('assets/images/banksampah-logo.webp');?>" class="navbar-brand-img h-100" alt="main_logo">
-            <span class="ml-3 font-weight-bold">Banksampah Dahlia</span>
+            <img src="<?= $detil_banksampah['logo'] ?>" class="navbar-brand-img h-100" alt="main_logo">
+            <span class="ml-3 font-weight-bold"><?= $detil_banksampah['name'] ?></span>
         </span>
     </div>
     <hr class="horizontal dark mt-0">

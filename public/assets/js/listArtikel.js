@@ -14,24 +14,24 @@ $(window).scroll(function () {
 /**
  * Get Kategori Artikel
  */
- axios.get(`${APIURL}/artikel/getkategori`)
- .then(res => {
-     let elKategori = ''
-     res.data.data.forEach(e => {
-         elKategori += `<a class="dropdown-item py-3" href="${BASEURL}/homepage/${e.name}">${e.name}</a>`;
-     });
+//  axios.get(`${APIURL}/artikel/getkategori`)
+//  .then(res => {
+//      let elKategori = ''
+//      res.data.data.forEach(e => {
+//          elKategori += `<a class="dropdown-item py-3" href="${BASEURL}/homepage/${e.name}">${e.name}</a>`;
+//      });
  
-     $('.dropdown-menu').html(elKategori);
- })
- .catch(err => {
+//      $('.dropdown-menu').html(elKategori);
+//  })
+//  .catch(err => {
  
- });
+//  });
 
 /**
 * GET ALL ARTIKEL
 */
 let arrayBerita = [];
-axios.get(`${APIURL}/artikel/getartikel?kategori=${KATEGORI}&orderby=terbaru`)
+axios.get(`${APIURL}/artikel/getartikel?slugBANKNAME=${slugBANKNAME}&slugKATEGORI=${slugKATEGORI}&orderby=terbaru`)
     .then(res => {
         let elBerita  = '';
         let allBerita = res.data.data;
@@ -44,7 +44,7 @@ axios.get(`${APIURL}/artikel/getartikel?kategori=${KATEGORI}&orderby=terbaru`)
             let year      = date.toLocaleString("en-US",{year: "numeric"});
 
             elBerita += `<div class="col-12 col-sm-6 col-md-4 mb-5">
-                <a href="${BASEURL}/artikel/${b.slug}" class="card text-white card-has-bg click-col position-relative" style="min-height: 220px;border-radius: 10px;">
+                <a href="${BASEURL}/bank/${slugBANKNAME}/artikel/${slugKATEGORI}/baca/${b.slug}" class="card text-white card-has-bg click-col position-relative" style="min-height: 220px;border-radius: 10px;">
                 
                     <img src="${b.thumbnail}" class="position-absolute" style="height:100%;width:100%;">
 

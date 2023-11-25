@@ -32,25 +32,26 @@ $routes->setAutoRoute(true);
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 
-$routes->add('/',                   'HomePage::index');
-$routes->add('/penghargaan',        'HomePage::listPenghargaan');
-$routes->add('/homepage/(:any)',    'HomePage::listArtikel/$1');
-$routes->add('/artikel/(:any)',     'HomePage::detilArtikel/$1');
-$routes->get("/homepage/statistik", "HomePage::getStatistik");
+// Home Page
+$routes->add('/', 'HomePage::index');
 $routes->get("/privacy", function () {
   echo view("HomePage/privacy", [
     "title" => "Privacy Policy"
   ]);
 });
 
-// Banksampah home page route
-$routes->add("/banksampah", "Banksampah::index");
+// Banksampah Partner
+$routes->get("/bank/(:any)/artikel/(:any)/baca/(:any)", "Banksampah::ArtikelDetil/$1/$2/$3");
+$routes->get("/bank/(:any)/artikel/(:any)", "Banksampah::ArtikelList/$1/$2");
+$routes->get("/bank/(:any)", "Banksampah::HomePageIndex/$1");
+$routes->get('/list-banksampah', 'Banksampah::listBankSampah');
 
 $routes->group("register", function ($routes) {
   // VIEWS
   $routes->add('/',           'Register::registerNasabahView');
   // API
   $routes->get("bulk",        'Register::bulkRegister');
+  $routes->post("banksampah", 'Register::banksampahRegister');
   $routes->post("nasabah",    'Register::nasabahRegister');
   $routes->post("admin",      'Register::adminRegister');
   $routes->add("(:any)",      "Notfound::PageNotFound");

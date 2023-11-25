@@ -19,6 +19,10 @@
 
 <!-- JS -->
 <?= $this->section('contentJs'); ?>
+<script>
+  const id_banksampah = "<?= $data_banksampah['id']; ?>";
+</script>
+
 <script src="<?= base_url('assets/js/banksampah.js'); ?>"></script>
 
 <script>
@@ -44,7 +48,7 @@
 <nav class="px-2 bg-white border-gray-200">
   <div class="flex flex-wrap items-center justify-between max-w-screen-xl py-6 mx-auto">
     <a href="#" class="flex items-center">
-      <img src="<?= base_url('assets/images/banksampahpedia/logo.png'); ?>" class="h-8 mr-3" alt="Banksampah Logo" />
+      <img src="<?= $data_banksampah['logo'] ?>" class="h-20 mr-3" alt="Banksampah Logo" />
     </a>
     <button data-collapse-toggle="navbar-default" type="button" class="inline-flex items-center p-2 ml-3 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 " aria-controls="navbar-default" aria-expanded="false">
       <span class="sr-only">Open main menu</span>
@@ -69,10 +73,6 @@
         <li>
           <a href="<?= base_url('banksampah/#contact-us'); ?>" class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700 md:p-0">Contact Us</a>
         </li>
-        <!--
-        <li>
-          <a href="<?= base_url('#pencapaian'); ?>" class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700 md:p-0">Data Sampah</a>
-        </li> -->
       </ul>
     </div>
     <div class="hidden gap-4 md:flex">
@@ -87,9 +87,9 @@
   <section id="beranda">
     <div class="grid grid-cols-1 md:grid-cols-2">
       <div class="flex flex-col place-content-center">
-        <h2 class="mb-4 text-4xl font-extrabold text-gray-800">Nama Bank Sampah</h2>
+        <h2 class="mb-4 text-4xl font-extrabold text-gray-800"><?= ucwords($data_banksampah['name']) ?></h2>
         <p class="mb-6 text-gray-600">
-          (Deskripsi Bank Sampah) Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Except
+          <?= ucfirst($data_banksampah['description']) ?>
         </p>
         <div class="flex space-x-4">
           <a href="<?= base_url('login'); ?>" class="px-8 py-2 text-green-700 rounded-full bg-green-50">Masuk</a>
@@ -103,59 +103,28 @@
   </section>
 
   <section id="data" class="py-12 space-y-4 text-white bg-green-700 rounded-lg">
-    <p class="mb-8 text-4xl font-extrabold text-center">Data Sampah</p>
-    <div class="grid grid-cols-2 gap-12 p-4 md:grid-cols-3 lg:grid-cols-4">
-      <div class="flex place-content-center">
-        <div class="flex flex-col p-4 bg-yellow-600 rounded-lg place-content-center place-items-center">
-          <div class="transform -translate-y-12">
-            <img class="w-24" src="<?= base_url('assets/images/banksampahpedia/1.png'); ?>" alt="">
-          </div>
-          <div class="transform -translate-y-6">
-            <p class="text-lg font-bold">6 Kg</p>
-            <p class="text-lg font-bold">Kertas</p>
-          </div>
-        </div>
-      </div>
-      <div class="flex place-content-center">
-        <div class="flex flex-col p-4 bg-blue-600 rounded-lg place-content-center place-items-center">
-          <div class="transform -translate-y-12">
-            <img class="w-24" src="<?= base_url('assets/images/banksampahpedia/2.png'); ?>" alt="">
-          </div>
-          <div class="transform -translate-y-6">
-            <p class="text-lg font-bold">6 Kg</p>
-            <p class="text-lg font-bold">Plastik</p>
-          </div>
-        </div>
-      </div>
-      <div class="flex place-content-center">
-        <div class="flex flex-col p-4 bg-pink-600 rounded-lg place-content-center place-items-center">
-          <div class="transform -translate-y-12">
-            <img class="w-24" src="<?= base_url('assets/images/banksampahpedia/3.png'); ?>" alt="">
-          </div>
-          <div class="transform -translate-y-6">
-            <p class="text-lg font-bold">6 Kg</p>
-            <p class="text-lg font-bold">Logam</p>
-          </div>
-        </div>
-      </div>
-      <div class="flex place-content-center">
-        <div class="flex flex-col p-4 bg-indigo-600 rounded-lg place-content-center place-items-center">
-          <div class="transform -translate-y-12">
-            <img class="w-24" src="<?= base_url('assets/images/banksampahpedia/4.png'); ?>" alt="">
-          </div>
-          <div class="transform -translate-y-6">
-            <p class="text-lg font-bold">6 Kg</p>
-            <p class="text-lg font-bold">Lain Lain</p>
-          </div>
-        </div>
-      </div>
+    <p class="mb-32 text-4xl font-extrabold text-center">Data Sampah</p>
+    <div id="sampah_masuk_wraper" class="grid grid-cols-2 gap-12 p-4 md:grid-cols-3 lg:grid-cols-4">
+      
     </div>
   </section>
 
   <section id="kegiatan">
     <p class="mb-8 text-4xl font-extrabold text-center">Kegiatan Bank Sampah</p>
     <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+      
+      <?php foreach ($data_kat_artikel as $row) { ?>
       <div class="flex flex-col gap-6 py-12 border-2 rounded-lg shadow-lg place-content-center place-items-center">
+        <div class="">
+          <img class="w-24" src="<?= $row['icon'] ?>" alt="">
+        </div>
+        <p class="mt-5 text-sm">Kategori</p>
+        <p class="text-lg font-bold"><?= $row['name'] ?></p>
+        <a href="<?= base_url('bank/' . $data_banksampah['slug'] . "/artikel/" . $row['slug']) ?>" class="mt-5 px-6 py-3 text-white bg-green-700 rounded-full hover:bg-green-900">Read More</a>
+      </div>
+      <?php }; ?>
+
+      <!-- <div class="flex flex-col gap-6 py-12 border-2 rounded-lg shadow-lg place-content-center place-items-center">
         <div class="">
           <img class="w-24" src="<?= base_url('assets/images/banksampahpedia/Frame.png'); ?>" alt="">
         </div>
@@ -170,28 +139,19 @@
         <p class="text-lg font-bold">Kategori</p>
         <p class="text-lg font-bold">Lain Lain</p>
         <button class="px-6 py-3 text-white bg-green-700 rounded-full hover:bg-green-900">Read More</button>
-      </div>
-      <div class="flex flex-col gap-6 py-12 border-2 rounded-lg shadow-lg place-content-center place-items-center">
-        <div class="">
-          <img class="w-24" src="<?= base_url('assets/images/banksampahpedia/Frame.png'); ?>" alt="">
-        </div>
-        <p class="text-lg font-bold">Kategori</p>
-        <p class="text-lg font-bold">Lain Lain</p>
-        <button class="px-6 py-3 text-white bg-green-700 rounded-full hover:bg-green-900">Read More</button>
-      </div>
+      </div> -->
     </div>
   </section>
 
   <section id="mitra">
-    <div class="p-4 mx-8 border-2 rounded-md shadow-lg">
+    <div class="p-4 mx-8">
       <p class="mb-8 text-4xl font-extrabold text-center">Mitra Kami</p>
-      <div class="grid grid-cols-2 gap-4 md:grid-cols-3">
-        <img src="<?= base_url('assets/images/banksampahpedia/image24.png'); ?>" alt="">
-        <img src="<?= base_url('assets/images/banksampahpedia/image25.png'); ?>" alt="">
-        <img src="<?= base_url('assets/images/banksampahpedia/image26.png'); ?>" alt="">
-        <img src="<?= base_url('assets/images/banksampahpedia/image27.png'); ?>" alt="">
-        <img src="<?= base_url('assets/images/banksampahpedia/image28.png'); ?>" alt="">
-        <img src="<?= base_url('assets/images/banksampahpedia/image29.png'); ?>" alt="">
+      <div class="grid grid-cols-3 gap-2 md:grid-cols-4">
+        <?php foreach ($data_mitra as $row) { ?>
+        <div class="max-w-sm p-6 mb-6 overflow-hidden bg-white shadow-md rounded-xl">
+          <img src="<?= $row['icon'] ?>" alt="Card Image" class="w-full mb-4 ">
+        </div>
+        <?php }; ?>
       </div>
     </div>
   </section>
@@ -199,27 +159,13 @@
   <section id="penghargaan">
     <div class="p-4 mx-8">
       <p class="mb-8 text-4xl font-extrabold text-center">Penghargaan</p>
-      <div class="grid grid-cols-2 gap-4 md:grid-cols-3">
+      <div class="grid grid-cols-3 gap-2 md:grid-cols-4">
+        <?php foreach ($data_penghargaan as $row) { ?>
         <div class="max-w-sm p-6 mb-6 overflow-hidden bg-white shadow-md rounded-xl">
-          <img src="<?= base_url("assets/images/logos/banksampah-logo.png"); ?>" alt="Card Image" class="h-32 mb-4 ">
-          <div class="mb-2 text-xl font-semibold">Penghargaan 1</div>
-          <p class="text-gray-600">Penghargaan yang diraih</p>
+          <img src="<?= $row['icon'] ?>" alt="Card Image" class="h-32 w-full mb-4 ">
+          <div class="text-md font-semibold"><?= $row['name'] ?></div>
         </div>
-        <div class="max-w-sm p-6 mb-6 overflow-hidden bg-white shadow-md rounded-xl">
-          <img src="<?= base_url("assets/images/logos/banksampah-logo.png"); ?>" alt="Card Image" class="h-32 mb-4 ">
-          <div class="mb-2 text-xl font-semibold">Penghargaan 1</div>
-          <p class="text-gray-600">Penghargaan yang diraih</p>
-        </div>
-        <div class="max-w-sm p-6 mb-6 overflow-hidden bg-white shadow-md rounded-xl">
-          <img src="<?= base_url("assets/images/logos/banksampah-logo.png"); ?>" alt="Card Image" class="h-32 mb-4 ">
-          <div class="mb-2 text-xl font-semibold">Penghargaan 1</div>
-          <p class="text-gray-600">Penghargaan yang diraih</p>
-        </div>
-        <div class="max-w-sm p-6 mb-6 overflow-hidden bg-white shadow-md rounded-xl">
-          <img src="<?= base_url("assets/images/logos/banksampah-logo.png"); ?>" alt="Card Image" class="h-32 mb-4 ">
-          <div class="mb-2 text-xl font-semibold">Penghargaan 1</div>
-          <p class="text-gray-600">Penghargaan yang diraih</p>
-        </div>
+        <?php }; ?>
       </div>
     </div>
   </section>

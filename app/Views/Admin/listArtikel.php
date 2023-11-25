@@ -120,7 +120,7 @@
 									© <script>
 										document.write(new Date().getFullYear())
 									</script>,
-									Bank Sampah Budi Luhur
+									<?= $detil_banksampah['brand'] ?>
 								</div>
 							</div>
 						</div>

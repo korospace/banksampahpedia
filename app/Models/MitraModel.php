@@ -34,10 +34,17 @@ class MitraModel extends Model
     }
 
     // get mitra
-    public function getMitra(): array
+    public function getMitra($id_banksampah=null): array
     {
         try {
-            $mitra = $this->db->table($this->table)->orderBy("id","desc")->get()->getResultArray();
+            $mitra = $this->db->table($this->table);
+
+            if ($id_banksampah != null) {
+                $mitra = $mitra->where("id_banksampah",$id_banksampah);
+            }
+
+            $mitra = $mitra->orderBy("id","desc")->get()->getResultArray();
+
             $mitra = $this->modifImgPath($mitra);
             
             if (empty($mitra)) {    
@@ -73,10 +80,10 @@ class MitraModel extends Model
         } 
     }
 
-    public function deleteMitra(string $id): array
+    public function deleteMitra(string $id,$id_banksampah): array
     {
         try {
-            $this->db->table($this->table)->where('id', $id)->delete();
+            $this->db->table($this->table)->where('id', $id)->where('id_banksampah', $id_banksampah)->delete();
             $affectedRows = $this->db->affectedRows();
 
             return [

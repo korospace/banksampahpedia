@@ -65,7 +65,7 @@ class SampahModel extends Model
     public function editSampah(array $data): array
     {
         try {
-            $this->db->table($this->table)->where('id',$data['id'])->update($data);
+            $this->db->table($this->table)->where('id',$data['id'])->where('id_banksampah',$data['id_banksampah'])->update($data);
 
             return [
                 'status'   => 201,
@@ -94,11 +94,11 @@ class SampahModel extends Model
         }
     }
 
-    public function deleteSampah(string $id): array
+    public function deleteSampah(string $id, $id_banksampah=false): array
     {
         try {
             if ($this->checkTransaksi($id)) {
-                $this->db->table($this->table)->where('id', $id)->delete();
+                $this->db->table($this->table)->where('id', $id)->where('id_banksampah', $id_banksampah)->delete();
                 $affectedRows = $this->db->affectedRows();
 
                 return [
@@ -131,14 +131,24 @@ class SampahModel extends Model
 
             if (isset($get['kategori'])) {
                 $sampah  = $this->db->table($this->table)->select('sampah.id,sampah.id_kategori,kategori_sampah.name AS kategori,sampah.jenis,sampah.harga,sampah.harga_pusat,sampah.jumlah')
-                ->join('kategori_sampah', 'kategori_sampah.id = sampah.id_kategori')
-                ->where('kategori_sampah.name',$get['kategori'])
+                ->join('kategori_sampah', 'kategori_sampah.id = sampah.id_kategori');
+                
+                if ($get['id_banksampah'] != null) {
+                    $sampah  = $sampah->where('sampah.id_banksampah',$get['id_banksampah']);
+                }
+                
+                $sampah  = $sampah->where('kategori_sampah.name',$get['kategori'])
                 ->orderBy('sampah.id',$orderby)->get()->getResultArray();
             } 
             else {
                 $sampah  = $this->db->table($this->table)->select('sampah.id,sampah.id_kategori,kategori_sampah.name AS kategori,sampah.jenis,sampah.harga,sampah.harga_pusat,sampah.jumlah')
-                ->join('kategori_sampah', 'kategori_sampah.id = sampah.id_kategori')
-                ->orderBy("sampah.id",$orderby)->get()->getResultArray();
+                ->join('kategori_sampah', 'kategori_sampah.id = sampah.id_kategori');
+
+                if ($get['id_banksampah'] != null) {
+                    $sampah  = $sampah->where('sampah.id_banksampah',$get['id_banksampah']);
+                }
+
+                $sampah  = $sampah->orderBy("sampah.id",$orderby)->get()->getResultArray();
             }
             
             if (empty($sampah)) {    

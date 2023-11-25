@@ -147,22 +147,29 @@
         <p class="absolute top-0 bottom-0 left-0 right-0 flex items-center justify-center p-4 text-2xl font-bold ">Jakarta</p>
       </div>
       <div class="relative h-20 p-4 rounded-lg" style="background-image: url('<?= base_url("assets/images/banksampahpedia/bandung.png"); ?>'); background-size: cover;">
-        <p class="absolute top-0 bottom-0 left-0 right-0 flex items-center justify-center p-4 text-2xl font-bold ">Bandung</p>
+        <p class="absolute top-0 bottom-4 left-0 right-0 flex items-center justify-center p-4 text-2xl font-bold ">Bandung</p>
+        <small class="absolute top-0 -bottom-10 left-0 right-0 flex items-center justify-center p-4 font-bold">(coming soon)</small>
       </div>
       <div class="relative h-20 p-4 rounded-lg" style="background-image: url('<?= base_url("assets/images/banksampahpedia/surabaya.png"); ?>'); background-size: cover;">
-        <p class="absolute top-0 bottom-0 left-0 right-0 flex items-center justify-center p-4 text-2xl font-bold ">Surabaya</p>
+        <p class="absolute top-0 bottom-4 left-0 right-0 flex items-center justify-center p-4 text-2xl font-bold ">Surabaya</p>
+        <small class="absolute top-0 -bottom-10 left-0 right-0 flex items-center justify-center p-4 font-bold">(coming soon)</small>
       </div>
       <div class="relative h-20 p-4 rounded-lg" style="background-image: url('<?= base_url("assets/images/banksampahpedia/padang.png"); ?>'); background-size: cover;">
-        <p class="absolute top-0 bottom-0 left-0 right-0 flex items-center justify-center p-4 text-2xl font-bold ">Padang</p>
+        <p class="absolute top-0 bottom-4 left-0 right-0 flex items-center justify-center p-4 text-2xl font-bold ">Padang</p>
+        <small class="absolute top-0 -bottom-10 left-0 right-0 flex items-center justify-center p-4 font-bold">(coming soon)</small>
       </div>
       <div class="relative h-20 p-4 rounded-lg" style="background-image: url('<?= base_url("assets/images/banksampahpedia/aceh.png"); ?>'); background-size: cover;">
-        <p class="absolute top-0 bottom-0 left-0 right-0 flex items-center justify-center p-4 text-2xl font-bold ">Aceh</p>
+        <p class="absolute top-0 bottom-4 left-0 right-0 flex items-center justify-center p-4 text-2xl font-bold ">Aceh</p>
+        <small class="absolute top-0 -bottom-10 left-0 right-0 flex items-center justify-center p-4 font-bold">(coming soon)</small>
+      </div>
+      <div class="relative h-20 p-4 rounded-lg" style="background-image: url('<?= base_url("assets/images/banksampahpedia/yogyakarta.webp"); ?>'); background-size: cover;">
+        <p class="absolute top-0 bottom-4 left-0 right-0 flex items-center justify-center p-4 text-2xl font-bold ">Yogyakarta</p>
+        <small class="absolute top-0 -bottom-10 left-0 right-0 flex items-center justify-center p-4 font-bold">(coming soon)</small>
       </div>
     </div>
-    <div class="max-w-sm p-6 mb-6 overflow-hidden bg-white shadow-md rounded-xl">
-      <img src="<?= base_url("assets/images/logos/banksampah-logo.png"); ?>" alt="Card Image" class="h-32 mb-4 ">
-      <div class="mb-2 text-xl font-semibold">Bank Sampah Budi Luhur</div>
-      <p class="text-gray-600">Bank Sampah Budi Luhur</p>
+
+    <div id="partner_wraper" class="grid grid-cols-4 gap-2 sm:grind-cols-3">
+      
     </div>
 
   </section>

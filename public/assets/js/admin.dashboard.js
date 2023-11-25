@@ -68,8 +68,10 @@ const getSaldoNasabah = async () => {
     if (httpResponse.status === 200) {
         let dataNasabah = httpResponse.data.data;
 
-        if (dataNasabah.saldo_bank != null && dataNasabah.saldo_nasabah != null) {
+        if (dataNasabah.saldo_bank != null) {
             $('#saldo-bank').html(modifUang(dataNasabah.saldo_bank.toString()));
+        }
+        if (dataNasabah.saldo_nasabah != null) {
             $('#saldo-nasabah').html(modifUang(dataNasabah.saldo_nasabah.toString()));
         }
     }

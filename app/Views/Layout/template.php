@@ -7,7 +7,7 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="shortcut icon" href="<?= base_url('assets/images/banksampah-logo.webp'); ?>" type="image/x-icon">
+  <link rel="shortcut icon" href="<?= isset($detil_banksampah['logo']) ? $detil_banksampah['logo'] : base_url('assets/images/banksampah-logo.webp') ?>" type="image/x-icon">
   
   <!-- Render Meta Article -->
   <?= $this->renderSection('contentSeo'); ?>

@@ -594,9 +594,9 @@ const doValidate = (form) => {
             $('#formAddEditNasabah #username-error').html('*username harus di isi');
             status = false;
         }
-        else if ($('#formAddEditNasabah #username').val().length < 8 || $('#formAddEditNasabah #username').val().length > 20) {
+        else if ($('#formAddEditNasabah #username').val().length < 7 || $('#formAddEditNasabah #username').val().length > 20) {
             $('#formAddEditNasabah #username').addClass('is-invalid');
-            $('#formAddEditNasabah #username-error').html('*minimal 8 huruf dan maksimal 20 huruf');
+            $('#formAddEditNasabah #username-error').html('*minimal 7 huruf dan maksimal 20 huruf');
             status = false;
         }
         else if (/\s/.test($('#formAddEditNasabah #username').val())) {

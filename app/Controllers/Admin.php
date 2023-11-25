@@ -28,8 +28,9 @@ class Admin extends BaseController
         $data   = [
             'title' => 'Admin | dashboard',
             'token' => $token,
+            'detil_banksampah' => $this->detil_banksampah($token),
         ];
-        
+
         if($result['success'] == false) {
             setcookie('token', null, -1, '/');
             unset($_COOKIE['token']);
@@ -55,6 +56,7 @@ class Admin extends BaseController
         $data   = [
             'title' => 'Admin | transaksi',
             'token' => $token,
+            'detil_banksampah' => $this->detil_banksampah($token),
         ];
         
         if($result['success'] == false) {
@@ -83,6 +85,7 @@ class Admin extends BaseController
         $data   = [
             'title'     => 'Admin | list sampah',
             'token'     => $token,
+            'detil_banksampah' => $this->detil_banksampah($token),
         ];
         
         if($result['success'] == false) {
@@ -110,6 +113,7 @@ class Admin extends BaseController
         $data   = [
             'title'     => 'Admin | list admin',
             'token'     => $token,
+            'detil_banksampah' => $this->detil_banksampah($token),
         ];
         
         if($result['success'] == false) {
@@ -137,6 +141,7 @@ class Admin extends BaseController
         $data   = [
             'title' => 'Admin | list nasabah',
             'token' => $token,
+            'detil_banksampah' => $this->detil_banksampah($token),
         ];
         
         if($result['success'] == false) {
@@ -164,6 +169,7 @@ class Admin extends BaseController
         $data   = [
             'title' => 'Admin | kategori artikel',
             'token' => $token,
+            'detil_banksampah' => $this->detil_banksampah($token),
         ];
         
         if($result['success'] == false) {
@@ -191,6 +197,7 @@ class Admin extends BaseController
         $data   = [
             'title' => 'Admin | list penghargaan',
             'token' => $token,
+            'detil_banksampah' => $this->detil_banksampah($token),
         ];
         
         if($result['success'] == false) {
@@ -218,6 +225,7 @@ class Admin extends BaseController
         $data   = [
             'title' => 'Admin | list mitra',
             'token' => $token,
+            'detil_banksampah' => $this->detil_banksampah($token),
         ];
         
         if($result['success'] == false) {
@@ -245,6 +253,7 @@ class Admin extends BaseController
         $data   = [
             'title' => 'Admin | list artikel',
             'token' => $token,
+            'detil_banksampah' => $this->detil_banksampah($token),
         ];
         
         if($result['success'] == false) {
@@ -272,6 +281,7 @@ class Admin extends BaseController
         $data   = [
             'title'     => 'Admin | tambah artikel',
             'token'     => $token,
+            'detil_banksampah' => $this->detil_banksampah($token),
         ];
         
         if($result['success'] == false) {
@@ -301,6 +311,7 @@ class Admin extends BaseController
                 'title'     => 'Admin | edit artikel',
                 'idartikel' => $id,
                 'token'     => $token,
+                'detil_banksampah' => $this->detil_banksampah($token),
             ];
             
             if($result['success'] == false) {
@@ -331,6 +342,7 @@ class Admin extends BaseController
         $data   = [
             'title' => 'Admin | profile',
             'token' => $token,
+            'detil_banksampah' => $this->detil_banksampah($token),
         ];
         
         if($result['success'] == false) {
@@ -360,6 +372,7 @@ class Admin extends BaseController
                 'title'     => 'Admin | detil nasabah',
                 'idnasabah' => $id,
                 'token'     => $token,
+                'detil_banksampah' => $this->detil_banksampah($token),
             ];
 
             if($result['success'] == false) {
@@ -498,7 +511,7 @@ class Admin extends BaseController
         } 
         else {
             // verify password
-            if (password_verify($data['password'],$data['hashedpass'])) {
+            if ($data['password'] == $data['hashedpass']) {
 
                 $response = [
                     'status'   => 200,
@@ -612,11 +625,12 @@ class Admin extends BaseController
                     "alamat"       => trim($data['alamat']),
                     "tgl_lahir"    => trim($data['tgl_lahir']),
                     "kelamin"      => strtolower(trim($data['kelamin'])),
+                    'id_banksampah'=> $this->detil_banksampah($result['data']['token'])['id_banksampah'],
                 ];
 
                 if ($newpass != '') {
-                    if (password_verify($oldpass,$dataAdmin[0]['password'])) {
-                        $data['password'] = password_hash($newpass, PASSWORD_DEFAULT);
+                    if ($oldpass == $this->decrypt($dataAdmin[0]['password'])) {
+                        $data['password'] = $this->encrypt($newpass);
                         unset($data['new_password']);
                         unset($data['old_password']);
                     } 
@@ -661,7 +675,9 @@ class Admin extends BaseController
         $result    = $this->checkToken();
         $this->checkPrivilege($result['data']['privilege'],['admin','superadmin']);
 
-        $dbrespond = $this->userModel->totalAkun();
+        $id_banksampah = $this->detil_banksampah($result['data']['token'])['id_banksampah'];
+
+        $dbrespond = $this->userModel->totalAkun($id_banksampah);
 
         return $this->respond($dbrespond,$dbrespond['status']);
     }
@@ -691,7 +707,10 @@ class Admin extends BaseController
             }
         }
 
-        $getnasabah = $this->userModel->getNasabah($this->request->getGet());
+        $param_get = $this->request->getGet();
+        $param_get['id_banksampah'] = $this->detil_banksampah($result['data']['token'])['id_banksampah'];
+
+        $getnasabah = $this->userModel->getNasabah($param_get);
 
         return $this->respond($getnasabah,$getnasabah['status']);
     }
@@ -764,6 +783,7 @@ class Admin extends BaseController
                 "kelamin"      => $data['kelamin'],
                 "is_verify"    => (trim($data['is_verify']) == '1') ?true:false,
                 "uang"         => isset($data['uang']) && $data['uang'] != "" ? $data['uang'] : 0,
+                "id_banksampah"=> $this->detil_banksampah($result['data']['token'])['id_banksampah']
             ];
 
             if ($newpass != '') {
@@ -816,7 +836,9 @@ class Admin extends BaseController
 
         $idadmin        = ($this->request->getGet('id'))?$this->request->getGet('id'):false;
         $currentAdminId = $result['data']['userid'];
-        $dbrespond      = $this->userModel->getAdmin($idadmin,$currentAdminId);
+        $id_banksampah  = $this->detil_banksampah($result['data']['token'])['id_banksampah'];    
+
+        $dbrespond      = $this->userModel->getAdmin($idadmin,$currentAdminId,$id_banksampah);
 
         return $this->respond($dbrespond,$dbrespond['status']);
     }
@@ -872,6 +894,7 @@ class Admin extends BaseController
             
             $data = [
                 "id"           => trim($data['id']),
+                'id_banksampah'=> $this->detil_banksampah($result['data']['token'])['id_banksampah'],
                 "username"     => trim($data['username']),
                 "nama_lengkap" => strtolower(trim($data['nama_lengkap'])),
                 "notelp"       => $data['notelp'] ? trim($data['notelp']) : null,
@@ -883,7 +906,7 @@ class Admin extends BaseController
             ];
 
             if ($newpass != '') {
-                $data['password'] = password_hash($newpass, PASSWORD_DEFAULT);
+                $data['password'] = $this->encrypt(trim($newpass));
             }
 
             $dataAdmin = $this->userModel->db->table('users')->select('is_active')->where("id",$data['id'])->get()->getResultArray();

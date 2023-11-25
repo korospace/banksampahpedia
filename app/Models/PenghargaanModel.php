@@ -34,10 +34,17 @@ class PenghargaanModel extends Model
     }
 
     // get penghargaan
-    public function getPenghargaan(): array
+    public function getPenghargaan($id_banksampah=null): array
     {
         try {
-            $penghargaan = $this->db->table($this->table)->orderBy("id","desc")->get()->getResultArray();
+            $penghargaan = $this->db->table($this->table);
+
+            if ($id_banksampah != null) {
+                $penghargaan = $penghargaan->where("id_banksampah",$id_banksampah);
+            }
+
+            $penghargaan = $penghargaan->orderBy("id","desc")->get()->getResultArray();
+
             $penghargaan = $this->modifImgPath($penghargaan);
             
             if (empty($penghargaan)) {    
@@ -73,10 +80,10 @@ class PenghargaanModel extends Model
         } 
     }
 
-    public function deletePenghargaan(string $id): array
+    public function deletePenghargaan(string $id,$id_banksampah): array
     {
         try {
-            $this->db->table($this->table)->where('id', $id)->delete();
+            $this->db->table($this->table)->where('id', $id)->where('id_banksampah', $id_banksampah)->delete();
             $affectedRows = $this->db->affectedRows();
 
             return [

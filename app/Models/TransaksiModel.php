@@ -258,7 +258,7 @@ class TransaksiModel extends Model
 
             $this->db->transBegin();
             $this->db->query("INSERT INTO transaksi (no,id,id_user,jenis_transaksi,date) VALUES($lastNomor,'$idtransaksi','$idnasabah','penjualan sampah',$date);");
-            $this->db->query("UPDATE dompet SET uang=uang+$totalHarga WHERE id_user IS NULL;");
+            $this->db->query("UPDATE dompet SET uang=uang+$totalHarga WHERE id_banksampah = $data[id_banksampah];");
             
             // $this->db->query($queryJmlSampah); // postgreSql
 
@@ -306,12 +306,16 @@ class TransaksiModel extends Model
                     $query .= " WHERE kategori_sampah.name='".$get['kategori']."'";
                 }
 
+                if (isset($get['id_banksampah']) && $get['id_banksampah'] != null) {
+                    $query .= " WHERE sampah.id_banksampah='".$get['id_banksampah']."'";
+                }
+
                 $query      .= "  GROUP BY sampah.jenis;";
                 $sampahMasuk = $this->db->query($query)->getResultArray();
             } 
             else {
                 $data      = [];
-                $katSampah = $this->db->query("SELECT name FROM kategori_sampah")->getResultArray();
+                $katSampah = $this->db->query("SELECT name FROM kategori_sampah WHERE id_banksampah='".$get['id_banksampah']."'")->getResultArray();
 
                 foreach ($katSampah as $key => $value) {
                     $query  = "SELECT SUM(setor_sampah.jumlah_kg) AS total
@@ -361,7 +365,7 @@ class TransaksiModel extends Model
         }
     }
 
-    public function getAllJenisSaldo(string $idNasabah): array
+    public function getAllJenisSaldo(string $idNasabah, int $id_banksampah = null): array
     {   
         try {
             $this->db->transBegin();
@@ -370,8 +374,8 @@ class TransaksiModel extends Model
                 $saldo = $this->db->table('dompet')->select('uang')->where('id_user',$idNasabah)->get()->getFirstRow();
             }
             else {
-                $saldoNasabah = $this->db->query("SELECT SUM(uang) AS uang FROM dompet WHERE id_user IS NOT NULL")->getFirstRow();
-                $saldoBank    = $this->db->query("SELECT SUM(uang) AS uang FROM dompet WHERE id_user IS NULL")->getFirstRow();
+                $saldoNasabah = $this->db->query("SELECT SUM(d.uang) AS uang FROM dompet d LEFT JOIN users u ON d.id_user=u.id WHERE d.id_user IS NOT NULL AND u.id_banksampah=$id_banksampah")->getFirstRow();
+                $saldoBank    = $this->db->query("SELECT SUM(uang) AS uang FROM dompet WHERE id_banksampah=$id_banksampah")->getFirstRow();
 
                 $saldo = [
                     "saldo_nasabah" => $saldoNasabah->uang,
@@ -411,7 +415,7 @@ class TransaksiModel extends Model
         }
     }
 
-    public function getData(array $get,string $idNasabah): array
+    public function getData(array $get,string $idNasabah,string $id_banksampah = null): array
     {
         try {
             if (isset($get['id_transaksi']) && !isset($get['idnasabah'])) {
@@ -473,7 +477,7 @@ class TransaksiModel extends Model
                 }
 
                 $orderby     = (isset($get['orderby']) && $get['orderby']=='terbaru')? 'DESC': 'ASC';
-                $query      .= " ORDER BY transaksi.date $orderby;";
+                $query      .= " AND users.id_banksampah = $id_banksampah ORDER BY transaksi.date $orderby;";
                 $transaction = $this->db->query($query)->getResultArray();
                 $transaction = $this->filterAllTransaksi($transaction);
             } 
@@ -559,7 +563,7 @@ class TransaksiModel extends Model
         return $transaction;
     }
 
-    public function rekapData(array $get): array
+    public function rekapData(array $get, string $id_banksampah = null): array
     {
         try {
             $transaction = [];
@@ -598,7 +602,7 @@ class TransaksiModel extends Model
                     JOIN setor_sampah ON (transaksi.id = setor_sampah.id_transaksi) 
                     JOIN sampah       ON (setor_sampah.id_sampah = sampah.id) 
                     JOIN wilayah      ON (wilayah.id_user = users.id)
-                    WHERE transaksi.date BETWEEN '$start' AND '$end' $filterWIlayah $nasabahWhereClause
+                    WHERE users.id_banksampah = $id_banksampah AND transaksi.date BETWEEN '$start' AND '$end' $filterWIlayah $nasabahWhereClause
                     ORDER BY date ASC;")->getResultArray();
                     $transaction['tss']  = $dataTss;
                 }
@@ -608,7 +612,7 @@ class TransaksiModel extends Model
                     FROM transaksi 
                     JOIN users        ON (transaksi.id_user = users.id)
                     JOIN tarik_saldo  ON (transaksi.id = tarik_saldo.id_transaksi) 
-                    WHERE transaksi.date BETWEEN '$start' AND '$end' AND users.privilege != 'nasabah'
+                    WHERE users.id_banksampah = $id_banksampah AND transaksi.date BETWEEN '$start' AND '$end' AND users.privilege != 'nasabah'
                     ORDER BY date ASC;")->getResultArray();
                     $transaction['ttsBst'] = $dataTtsBst;
 
@@ -617,7 +621,7 @@ class TransaksiModel extends Model
                     JOIN users        ON (transaksi.id_user = users.id)
                     JOIN tarik_saldo  ON (transaksi.id = tarik_saldo.id_transaksi) 
                     JOIN wilayah      ON (wilayah.id_user = users.id)
-                    WHERE transaksi.date BETWEEN '$start' AND '$end' $filterWIlayah $nasabahWhereClause
+                    WHERE users.id_banksampah = $id_banksampah AND transaksi.date BETWEEN '$start' AND '$end' $filterWIlayah $nasabahWhereClause
                     ORDER BY date ASC;")->getResultArray();
                     $transaction['tts']  = $dataTts;
                 }
@@ -628,7 +632,7 @@ class TransaksiModel extends Model
                     JOIN users        ON (transaksi.id_user = users.id)
                     JOIN jual_sampah  ON (transaksi.id = jual_sampah.id_transaksi) 
                     JOIN sampah       ON (jual_sampah.id_sampah = sampah.id) 
-                    WHERE transaksi.date BETWEEN '$start' AND '$end'
+                    WHERE users.id_banksampah = $id_banksampah AND transaksi.date BETWEEN '$start' AND '$end'
                     ORDER BY date ASC;")->getResultArray();
                     $transaction['tjs']  = $dataTjs;
                 }
@@ -640,13 +644,13 @@ class TransaksiModel extends Model
 
             } 
             else {
-                // var_dump($get['year']);die;
                 $query  = "SELECT transaksi.id,transaksi.date,
                 (SELECT SUM(jumlah_kg) from setor_sampah WHERE setor_sampah.id_transaksi = transaksi.id) AS sampah_masuk,
                 (SELECT SUM(jumlah_kg) from jual_sampah WHERE jual_sampah.id_transaksi = transaksi.id) AS sampah_keluar,
                 (SELECT SUM(jumlah_rp) from setor_sampah WHERE setor_sampah.id_transaksi = transaksi.id) AS uang_masuk,
                 (SELECT SUM(jumlah_tarik) from tarik_saldo WHERE tarik_saldo.id_transaksi = transaksi.id) AS uang_keluar
-                FROM transaksi";
+                FROM transaksi
+                LEFT JOIN users ON (transaksi.id_user = users.id)";
 
                 if (isset($get['provinsi'])) {
                     $query .= " JOIN wilayah ON (transaksi.id_user = wilayah.id_user)";
@@ -675,7 +679,7 @@ class TransaksiModel extends Model
                     $query .= " AND wilayah.provinsi = '".$get['provinsi']."'";
                 }
 
-                $query       .= " ORDER BY transaksi.date ASC;";
+                $query       .= " AND users.id_banksampah = $id_banksampah ORDER BY transaksi.date ASC;";
                 $transaction = $this->db->query($query)->getResultArray();
                 $transaction = $this->filterRekapData($transaction,$year);
             } 
@@ -796,7 +800,8 @@ class TransaksiModel extends Model
             $query  = "SELECT transaksi.id,transaksi.date,wilayah.provinsi,
             (SELECT SUM(jumlah_kg) from setor_sampah WHERE setor_sampah.id_transaksi = transaksi.id) AS sampah_masuk
             FROM transaksi
-            JOIN wilayah ON (transaksi.id_user = wilayah.id_user)";
+            JOIN wilayah    ON (transaksi.id_user = wilayah.id_user)
+            LEFT JOIN users ON (transaksi.id_user = users.id)";
 
             $provinsi  = (isset($get['provinsi'])) ? $get['provinsi'] : "";
             $kota      = (isset($get['kota'])) ? $get['kota'] : "";
@@ -837,7 +842,7 @@ class TransaksiModel extends Model
                 $query .= "  AND transaksi.id_user='$idnasabah'";
             }
 
-            $query      .= " ORDER BY transaksi.no ASC;";
+            $query      .= " AND users.id_banksampah = $get[id_banksampah] ORDER BY transaksi.no ASC;";
             $transaction = $this->db->query($query)->getResultArray();
             $transaction = $this->removeNullGrafik($transaction);
             $transaction = $this->groupingGrafikPerbulan($transaction,$year);
@@ -938,7 +943,8 @@ class TransaksiModel extends Model
             FROM transaksi
             JOIN setor_sampah ON (transaksi.id = setor_sampah.id_transaksi)
             JOIN wilayah      ON (transaksi.id_user = wilayah.id_user)
-                WHERE transaksi.date BETWEEN '$start' AND '$end'
+            LEFT JOIN users   ON (transaksi.id_user = users.id)
+                WHERE users.id_banksampah = $get[id_banksampah] AND transaksi.date BETWEEN '$start' AND '$end'
             GROUP BY wilayah.provinsi;";
 
             if ($provinsi != "") {
@@ -947,8 +953,10 @@ class TransaksiModel extends Model
                 FROM transaksi
                 JOIN setor_sampah ON (transaksi.id = setor_sampah.id_transaksi)
                 JOIN wilayah      ON (transaksi.id_user = wilayah.id_user)
+                LEFT JOIN users   ON (transaksi.id_user = users.id)
                     WHERE transaksi.date BETWEEN '$start' AND '$end'
                     AND wilayah.provinsi = '$provinsi'
+                    AND users.id_banksampah = $get[id_banksampah]
                 GROUP BY wilayah.kota";
             }
             if ($kota != "") {
@@ -957,9 +965,11 @@ class TransaksiModel extends Model
                 FROM transaksi
                 JOIN setor_sampah ON (transaksi.id = setor_sampah.id_transaksi)
                 JOIN wilayah      ON (transaksi.id_user = wilayah.id_user)
+                LEFT JOIN users   ON (transaksi.id_user = users.id)
                     WHERE transaksi.date BETWEEN '$start' AND '$end'
                     AND wilayah.provinsi = '$provinsi'
                     AND wilayah.kota     = '$kota'
+                    AND users.id_banksampah = $get[id_banksampah]
                 GROUP BY wilayah.kecamatan;";
             }
             if ($kecamatan != "") {
@@ -968,10 +978,12 @@ class TransaksiModel extends Model
                 FROM transaksi
                 JOIN setor_sampah ON (transaksi.id = setor_sampah.id_transaksi)
                 JOIN wilayah      ON (transaksi.id_user = wilayah.id_user)
+                LEFT JOIN users   ON (transaksi.id_user = users.id)
                     WHERE transaksi.date BETWEEN '$start' AND '$end'
                     AND wilayah.provinsi   = '$provinsi'
                     AND wilayah.kota       = '$kota'
                     AND wilayah.kecamatan  = '$kecamatan'
+                    AND users.id_banksampah = $get[id_banksampah]
                 GROUP BY wilayah.kelurahan;";
             }
 

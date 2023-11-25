@@ -1,27 +1,32 @@
--- MariaDB dump 10.19  Distrib 10.4.27-MariaDB, for Linux (x86_64)
+-- phpMyAdmin SQL Dump
+-- version 5.2.0
+-- https://www.phpmyadmin.net/
 --
--- Host: localhost    Database: db_bsdahliah
--- ------------------------------------------------------
--- Server version	10.4.27-MariaDB
+-- Host: localhost
+-- Generation Time: Oct 19, 2023 at 08:36 AM
+-- Server version: 10.4.27-MariaDB
+-- PHP Version: 7.4.33
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Database: `db_banksampahpedia`
+--
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `artikel`
 --
 
-DROP TABLE IF EXISTS `artikel`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `artikel` (
   `id` varchar(10) NOT NULL,
   `title` varchar(255) NOT NULL,
@@ -31,89 +36,79 @@ CREATE TABLE `artikel` (
   `id_kategori` varchar(200) NOT NULL,
   `created_at` bigint(20) NOT NULL,
   `published_at` bigint(20) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `title` (`title`),
-  KEY `artikel_id_kategori_foreign` (`id_kategori`),
-  CONSTRAINT `artikel_id_kategori_foreign` FOREIGN KEY (`id_kategori`) REFERENCES `kategori_artikel` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  `id_banksampah` bigint(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+
+-- --------------------------------------------------------
 
 --
--- Dumping data for table `artikel`
+-- Table structure for table `banksampah`
 --
 
-LOCK TABLES `artikel` WRITE;
-/*!40000 ALTER TABLE `artikel` DISABLE KEYS */;
-/*!40000 ALTER TABLE `artikel` ENABLE KEYS */;
-UNLOCK TABLES;
+CREATE TABLE `banksampah` (
+  `id` bigint(20) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `slug` text NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `notelp` varchar(255) NOT NULL,
+  `description` longtext NOT NULL,
+  `address` longtext NOT NULL,
+  `logo` varchar(255) NOT NULL,
+  `created_at` int(11) NOT NULL,
+  `updated_at` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `banksampah`
+--
+
+INSERT INTO `banksampah` (`id`, `name`, `slug`, `email`, `notelp`, `description`, `address`, `logo`, `created_at`, `updated_at`) VALUES
+(5, 'bank budi luhur', 'bank-budi-luhur', 'elkoro424@gmail.com', '112233445566', 'deskripsi', 'alamat', '652fec9296b6f.jpeg', 1697639570, NULL),
+(7, 'bank sampah teratai', 'bank-sampah-teratai', 'bagaselkoro2@gmail.com', '223344556677', 'deskripsi', 'alamat', '652ff6b2dc985.jpeg', 1697642162, NULL);
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `dompet`
 --
 
-DROP TABLE IF EXISTS `dompet`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `dompet` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL,
   `id_user` varchar(200) DEFAULT NULL,
-  `uang` decimal(11,2) NOT NULL DEFAULT 0.00,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `id_user` (`id_user`),
-  CONSTRAINT `dompet_id_user_foreign` FOREIGN KEY (`id_user`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=422 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `uang` decimal(11,2) NOT NULL DEFAULT 0.00
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `dompet`
 --
 
-LOCK TABLES `dompet` WRITE;
-/*!40000 ALTER TABLE `dompet` DISABLE KEYS */;
-INSERT INTO `dompet` VALUES (1,NULL,0.00),(421,'0202001',13000.00);
-/*!40000 ALTER TABLE `dompet` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `dompet` (`id`, `id_user`, `uang`) VALUES
+(423, '0402001', '0.00'),
+(424, '0201001', '7200.00');
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `jual_sampah`
 --
 
-DROP TABLE IF EXISTS `jual_sampah`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `jual_sampah` (
-  `no` int(11) NOT NULL AUTO_INCREMENT,
+  `no` int(11) NOT NULL,
   `id_transaksi` varchar(200) NOT NULL,
   `id_sampah` varchar(200) NOT NULL,
   `harga_pusat` int(11) NOT NULL DEFAULT 0,
   `harga` int(11) NOT NULL DEFAULT 0,
   `jumlah_kg` decimal(65,2) NOT NULL,
   `harga_nasabah` decimal(11,2) NOT NULL,
-  `jumlah_rp` decimal(11,2) NOT NULL,
-  PRIMARY KEY (`no`),
-  KEY `jual_sampah_id_transaksi_foreign` (`id_transaksi`),
-  KEY `jual_sampah_id_sampah_foreign` (`id_sampah`),
-  CONSTRAINT `jual_sampah_id_sampah_foreign` FOREIGN KEY (`id_sampah`) REFERENCES `sampah` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `jual_sampah_id_transaksi_foreign` FOREIGN KEY (`id_transaksi`) REFERENCES `transaksi` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=164 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `jumlah_rp` decimal(11,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
---
--- Dumping data for table `jual_sampah`
---
-
-LOCK TABLES `jual_sampah` WRITE;
-/*!40000 ALTER TABLE `jual_sampah` DISABLE KEYS */;
-/*!40000 ALTER TABLE `jual_sampah` ENABLE KEYS */;
-UNLOCK TABLES;
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `kategori_artikel`
 --
 
-DROP TABLE IF EXISTS `kategori_artikel`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `kategori_artikel` (
   `id` varchar(6) NOT NULL,
   `icon` text NOT NULL,
@@ -121,137 +116,127 @@ CREATE TABLE `kategori_artikel` (
   `description` text NOT NULL,
   `kategori_utama` tinyint(1) NOT NULL,
   `created_at` bigint(20) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`)
+  `id_banksampah` bigint(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `kategori_artikel`
 --
 
-LOCK TABLES `kategori_artikel` WRITE;
-/*!40000 ALTER TABLE `kategori_artikel` DISABLE KEYS */;
-INSERT INTO `kategori_artikel` VALUES ('KA01','633e678d3682e.jpeg','sosialisasi','deskripsi tentang kegiatan sosialisasi',1,1659345174),('KA02','633e6a1817cb8.jpeg','penimbangan','deskripsi tentang kegiatan penimbangan',1,1659345189),('KA05','633e66fa82677.jpeg','Pelatihan','Pelatihan pembuatan Tepache dan Ecoenzym',1,1661410608);
-/*!40000 ALTER TABLE `kategori_artikel` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `kategori_artikel` (`id`, `icon`, `name`, `description`, `kategori_utama`, `created_at`, `id_banksampah`) VALUES
+('KA06', '65301cff4b45b.png', 'kat 1 xx', 'kat 1 xx', 1, 1697651967, 7),
+('KA08', '65301d343c8ff.png', 'kat hoho', 'kat hoho', 1, 1697652020, 5),
+('KA09', '65301d4290401.jpeg', 'kat yuhu', 'kat yuhu', 1, 1697652034, 5);
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `kategori_sampah`
 --
 
-DROP TABLE IF EXISTS `kategori_sampah`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `kategori_sampah` (
   `id` varchar(6) NOT NULL,
   `name` varchar(100) NOT NULL,
   `created_at` bigint(20) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`)
+  `id_banksampah` bigint(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `kategori_sampah`
 --
 
-LOCK TABLES `kategori_sampah` WRITE;
-/*!40000 ALTER TABLE `kategori_sampah` DISABLE KEYS */;
-INSERT INTO `kategori_sampah` VALUES ('KS01','kertas',1656644130),('KS02','plastik',1656644134),('KS03','logam',1656644137),('KS04','lain-lain',1656644141),('KS05','kaca',1667099986);
-/*!40000 ALTER TABLE `kategori_sampah` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `kategori_sampah` (`id`, `name`, `created_at`, `id_banksampah`) VALUES
+('KS06', 'tes 1122', 1697647492, 5),
+('KS07', 'kertas', 1697696565, 7),
+('KS08', 'logam', 1697696567, 7),
+('KS09', 'plastik', 1697696571, 7),
+('KS10', 'lain-lain', 1697696575, 7);
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `migrations`
 --
 
-DROP TABLE IF EXISTS `migrations`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `migrations` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) UNSIGNED NOT NULL,
   `version` varchar(255) NOT NULL,
   `class` varchar(255) NOT NULL,
   `group` varchar(255) NOT NULL,
   `namespace` varchar(255) NOT NULL,
   `time` int(11) NOT NULL,
-  `batch` int(11) unsigned NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `batch` int(11) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `migrations`
 --
 
-LOCK TABLES `migrations` WRITE;
-/*!40000 ALTER TABLE `migrations` DISABLE KEYS */;
-INSERT INTO `migrations` VALUES (27,'2021-11-16-023013','App\\Database\\Migrations\\Users','default','App',1656643580,1),(28,'2021-11-16-023841','App\\Database\\Migrations\\KategoriArtikel','default','App',1656643580,1),(29,'2021-11-16-024046','App\\Database\\Migrations\\Artikel','default','App',1656643580,1),(30,'2021-11-16-031046','App\\Database\\Migrations\\KategoriSampah','default','App',1656643580,1),(31,'2021-11-16-031125','App\\Database\\Migrations\\Sampah','default','App',1656643580,1),(32,'2021-11-16-031158','App\\Database\\Migrations\\Transaksi','default','App',1656643580,1),(33,'2021-11-16-031238','App\\Database\\Migrations\\SetorSampah','default','App',1656643580,1),(34,'2021-11-16-031308','App\\Database\\Migrations\\TarikSaldo','default','App',1656643580,1),(35,'2021-11-16-031428','App\\Database\\Migrations\\JualSampah','default','App',1656643580,1),(36,'2021-11-16-040233','App\\Database\\Migrations\\Wilayah','default','App',1656643580,1),(37,'2021-11-23-225132','App\\Database\\Migrations\\Dompet','default','App',1656643580,1),(38,'2022-04-08-054206','App\\Database\\Migrations\\Penghargaan','default','App',1656643580,1),(39,'2022-04-08-115035','App\\Database\\Migrations\\Mitra','default','App',1656643580,1);
-/*!40000 ALTER TABLE `migrations` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `migrations` (`id`, `version`, `class`, `group`, `namespace`, `time`, `batch`) VALUES
+(27, '2021-11-16-023013', 'App\\Database\\Migrations\\Users', 'default', 'App', 1656643580, 1),
+(28, '2021-11-16-023841', 'App\\Database\\Migrations\\KategoriArtikel', 'default', 'App', 1656643580, 1),
+(29, '2021-11-16-024046', 'App\\Database\\Migrations\\Artikel', 'default', 'App', 1656643580, 1),
+(30, '2021-11-16-031046', 'App\\Database\\Migrations\\KategoriSampah', 'default', 'App', 1656643580, 1),
+(31, '2021-11-16-031125', 'App\\Database\\Migrations\\Sampah', 'default', 'App', 1656643580, 1),
+(32, '2021-11-16-031158', 'App\\Database\\Migrations\\Transaksi', 'default', 'App', 1656643580, 1),
+(33, '2021-11-16-031238', 'App\\Database\\Migrations\\SetorSampah', 'default', 'App', 1656643580, 1),
+(34, '2021-11-16-031308', 'App\\Database\\Migrations\\TarikSaldo', 'default', 'App', 1656643580, 1),
+(35, '2021-11-16-031428', 'App\\Database\\Migrations\\JualSampah', 'default', 'App', 1656643580, 1),
+(36, '2021-11-16-040233', 'App\\Database\\Migrations\\Wilayah', 'default', 'App', 1656643580, 1),
+(37, '2021-11-23-225132', 'App\\Database\\Migrations\\Dompet', 'default', 'App', 1656643580, 1),
+(38, '2022-04-08-054206', 'App\\Database\\Migrations\\Penghargaan', 'default', 'App', 1656643580, 1),
+(39, '2022-04-08-115035', 'App\\Database\\Migrations\\Mitra', 'default', 'App', 1656643580, 1);
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `mitra`
 --
 
-DROP TABLE IF EXISTS `mitra`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `mitra` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL,
   `icon` text NOT NULL,
   `name` varchar(255) NOT NULL,
   `description` text NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `id_banksampah` bigint(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `mitra`
 --
 
-LOCK TABLES `mitra` WRITE;
-/*!40000 ALTER TABLE `mitra` DISABLE KEYS */;
-INSERT INTO `mitra` VALUES (3,'63cc7494b5f1f.jpeg','UNIVERSITAS BUDI LUHUR JAKARTA','Bank Sampah Teratai (BST) bekerjasama/bermitra dengan Universitas Budi Luhur sejak berdirinya BST pada tahun 2014 hingga sekarang. Kerjasama ini dilakukan dengan menerjunkan dosen dan mahasiswa Universitas Budi Luhur dalam kegiatan Pengabdian Kepada Masyarakat dan Kuliah Kerja Nyata.'),(5,'648afdf651a9f.webp','Bank Sampah Teratai','-');
-/*!40000 ALTER TABLE `mitra` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `mitra` (`id`, `icon`, `name`, `description`, `id_banksampah`) VALUES
+(8, '653074373d9d6.png', 'Bank Sampah Budi Luhur', 'Bank Sampah Budi Luhur', 7),
+(9, '6530745213511.png', 'Universitas Budi Luhur', 'Universitas Budi Luhur', 7);
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `penghargaan`
 --
 
-DROP TABLE IF EXISTS `penghargaan`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `penghargaan` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL,
   `icon` text NOT NULL,
   `name` varchar(255) NOT NULL,
   `description` text NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `id_banksampah` bigint(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `penghargaan`
 --
 
-LOCK TABLES `penghargaan` WRITE;
-/*!40000 ALTER TABLE `penghargaan` DISABLE KEYS */;
-INSERT INTO `penghargaan` VALUES (2,'63cc70594f18a.jpeg','JUARA KEDUA BANK SAMPAH UTAMA  KOTA TANGERANG TAHUN 2019','Kejuaraan mengikuti lomba bank sampah tingkat kota Tangerang pada tahun 2019'),(3,'63cc715979730.jpeg','JUARA KETIGA LOMBA PENGELOLAAAN BANK SAMPAH TINGKAT KECAMATAN PINANG TAHUN 2022','Kejuaraan mengikuti lomba Pengelolaan Bank Sampah dalam rangka HUT Kota Tangerang ke 29 tingkat Kecamatan Pinang pada bulan Februari 2022');
-/*!40000 ALTER TABLE `penghargaan` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `penghargaan` (`id`, `icon`, `name`, `description`, `id_banksampah`) VALUES
+(6, '653074ceca88d.jpeg', 'JUARA KETIGA LOMBA PENGELOLAAAN BANK SAMPAH TINGKAT KECAMATAN PINANG TAHUN', 'Kejuaraan mengikuti lomba Pengelolaan Bank Sampah dalam rangka HUT Kota Tangerang ke 29 tingkat Kecamatan Pinang pada bulan Februari 2022', 7),
+(7, '653074eed9bde.jpeg', 'JUARA KEDUA BANK SAMPAH UTAMA KOTA TANGERANG TAHUN 2019', 'Kejuaraan mengikuti lomba bank sampah tingkat kota Tangerang pada tahun 2019', 7);
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `sampah`
 --
 
-DROP TABLE IF EXISTS `sampah`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `sampah` (
   `id` varchar(6) NOT NULL,
   `id_kategori` varchar(200) NOT NULL,
@@ -259,120 +244,82 @@ CREATE TABLE `sampah` (
   `harga` int(11) NOT NULL,
   `harga_pusat` int(11) NOT NULL DEFAULT 0,
   `jumlah` decimal(65,2) NOT NULL DEFAULT 0.00,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `jenis` (`jenis`),
-  KEY `sampah_id_kategori_foreign` (`id_kategori`),
-  CONSTRAINT `sampah_id_kategori_foreign` FOREIGN KEY (`id_kategori`) REFERENCES `kategori_sampah` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  `id_banksampah` bigint(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `sampah`
 --
 
-LOCK TABLES `sampah` WRITE;
-/*!40000 ALTER TABLE `sampah` DISABLE KEYS */;
-INSERT INTO `sampah` VALUES ('S001','KS02','botol plastik bersih / bodong',0,0,0.00),('S002','KS02','botol plastik kotor',0,0,0.00),('S003','KS02','gelas aqua bersih',0,0,0.00),('S004','KS02','gelas aqua kotor',0,0,0.00),('S005','KS02','emberan/gabruk',0,0,0.00),('S006','KS02','kantong kresek / asoy',0,0,0.00),('S007','KS02','plastik bening pe bersih',0,0,0.00),('S008','KS02','tutup botol plastik',0,0,0.00),('S009','KS02','tutup galon',0,0,0.00),('S010','KS02','galon aqua/ades - per botol',0,0,0.00),('S011','KS02','paralon',0,0,0.00),('S012','KS02','galon bukan aqua/ades',0,0,0.00),('S013','KS02','ale-ale / teh gelas',0,0,0.00),('S014','KS02','compact disc (cd)',0,0,0.00),('S015','KS01','kardus',0,0,0.00),('S016','KS01','koran',0,0,0.00),('S017','KS01','majalah/buku pelajaran/buku tulis',0,0,0.00),('S018','KS01','kertas hvs / swl',0,0,0.00),('S019','KS01','kertas semen',0,0,0.00),('S020','KS01','boncos / potongan kardus',0,0,0.00),('S021','KS03','besi a (padat): baut',0,0,0.00),('S022','KS03','besi b (bolong) / kabin',0,0,0.00),('S023','KS03','kaleng',0,0,0.00),('S024','KS03','aluminium/klg softdrink/rongsok',0,0,0.00),('S025','KS03','seng',0,0,0.00),('S026','KS03','besi springbed',0,0,0.00),('S027','KS03','siku (stainless stell/jemuran/rak piring)',0,0,0.00),('S028','KS05','botol kecap - per botol',0,0,0.00),('S029','KS05','botol beling',0,0,0.00),('S031','KS04','tetrapak',0,0,0.00),('S032','KS04','minyak jelantah',0,0,0.00),('S033','KS04','jerigen putih (naso)',0,0,0.00),('S034','KS03','panci (aluminium)',0,0,0.00),('S035','KS04','majic jar',0,0,0.00),('S036','KS04','kompor gas',0,0,0.00),('S037','KS04','toples nastar (kristal)',0,0,0.00),('S038','KS03','kipas angin, pompa sepeda(besi  b)',0,0,0.00),('S039','KS04','tv -  satuan',0,0,0.00),('S040','KS04','monitor  - satuan',0,0,0.00),('S041','KS04','printer',0,0,0.00),('S042','KS04','laptop',0,0,0.00),('S043','KS04','mesin cuci',0,0,0.00),('S044','KS04','aki (buang air)',0,0,0.00),('S045','KS02','plastik terpal',0,0,0.00),('S046','KS02','karpet talang',0,0,0.00),('S048','KS04','stabilizer',0,0,0.00),('S049','KS04','mijel',0,0,0.00),('S050','KS02','plastik bening pe campur',0,0,0.00),('S051','KS02','plastik bening pe warna',0,0,0.00),('S052','KS04','dispenser',0,0,0.00),('S053','KS03','tembaga',0,0,0.00),('S054','KS03','kuningan',0,0,0.00),('S055','KS04','kulkas',0,0,0.00),('S056','KS04','mesin jahit',0,0,0.00),('S057','KS02','karung plastik (eks beras, tepung dll)',0,0,0.00),('S058','KS01','duplex',0,0,0.00),('S059','KS02','ekobrik',0,0,0.00),('S060','KS01','kones (karton bekas gulungan kain/benang)',0,0,0.00),('S061','KS02','tali plastik',0,0,0.00),('S062','KS05','botol bir (satuan)',0,0,0.00),('S063','KS03','dinamo tembaga',0,0,0.00),('S064','KS03','dinamo non tembaga = besi a',0,0,0.00),('S065','KS03','trafo (besi a)',0,0,0.00),('S067','KS02','injek - kotak es krim (putih)',0,0,0.00),('S068','KS03','tabung pompa air',0,0,0.00),('S069','KS04','tv flat -layar datar',0,0,0.00);
-/*!40000 ALTER TABLE `sampah` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `sampah` (`id`, `id_kategori`, `jenis`, `harga`, `harga_pusat`, `jumlah`, `id_banksampah`) VALUES
+('S001', 'KS07', 'jenis a', 1800, 2000, '4.00', 7);
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `setor_sampah`
 --
 
-DROP TABLE IF EXISTS `setor_sampah`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `setor_sampah` (
-  `no` int(11) NOT NULL AUTO_INCREMENT,
+  `no` int(11) NOT NULL,
   `id_transaksi` varchar(200) NOT NULL,
   `id_sampah` varchar(200) NOT NULL,
   `harga_pusat` int(11) NOT NULL DEFAULT 0,
   `harga` int(11) NOT NULL DEFAULT 0,
   `jumlah_kg` decimal(65,2) NOT NULL,
-  `jumlah_rp` decimal(11,2) NOT NULL,
-  PRIMARY KEY (`no`),
-  KEY `setor_sampah_id_transaksi_foreign` (`id_transaksi`),
-  KEY `setor_sampah_id_sampah_foreign` (`id_sampah`),
-  CONSTRAINT `setor_sampah_id_sampah_foreign` FOREIGN KEY (`id_sampah`) REFERENCES `sampah` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `setor_sampah_id_transaksi_foreign` FOREIGN KEY (`id_transaksi`) REFERENCES `transaksi` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5643 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `jumlah_rp` decimal(11,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `setor_sampah`
 --
 
-LOCK TABLES `setor_sampah` WRITE;
-/*!40000 ALTER TABLE `setor_sampah` DISABLE KEYS */;
-/*!40000 ALTER TABLE `setor_sampah` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `setor_sampah` (`no`, `id_transaksi`, `id_sampah`, `harga_pusat`, `harga`, `jumlah_kg`, `jumlah_rp`) VALUES
+(5644, 'TSS178247056', 'S001', 2000, 1800, '4.00', '7200.00');
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `tarik_saldo`
 --
 
-DROP TABLE IF EXISTS `tarik_saldo`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tarik_saldo` (
-  `no` int(11) NOT NULL AUTO_INCREMENT,
+  `no` int(11) NOT NULL,
   `id_transaksi` varchar(200) NOT NULL,
   `jumlah_tarik` decimal(65,4) NOT NULL,
-  `description` text DEFAULT NULL,
-  PRIMARY KEY (`no`),
-  KEY `tarik_saldo_id_transaksi_foreign` (`id_transaksi`),
-  CONSTRAINT `tarik_saldo_id_transaksi_foreign` FOREIGN KEY (`id_transaksi`) REFERENCES `transaksi` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=91 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `description` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
---
--- Dumping data for table `tarik_saldo`
---
-
-LOCK TABLES `tarik_saldo` WRITE;
-/*!40000 ALTER TABLE `tarik_saldo` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tarik_saldo` ENABLE KEYS */;
-UNLOCK TABLES;
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `transaksi`
 --
 
-DROP TABLE IF EXISTS `transaksi`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `transaksi` (
-  `no` int(11) NOT NULL AUTO_INCREMENT,
+  `no` int(11) NOT NULL,
   `id` varchar(12) NOT NULL,
   `id_user` varchar(200) NOT NULL,
   `jenis_transaksi` varchar(50) NOT NULL,
-  `date` bigint(20) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `transaksi_id_user_foreign` (`id_user`),
-  KEY `no` (`no`),
-  CONSTRAINT `transaksi_id_user_foreign` FOREIGN KEY (`id_user`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=665 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `date` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `transaksi`
 --
 
-LOCK TABLES `transaksi` WRITE;
-/*!40000 ALTER TABLE `transaksi` DISABLE KEYS */;
-/*!40000 ALTER TABLE `transaksi` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `transaksi` (`no`, `id`, `id_user`, `jenis_transaksi`, `date`) VALUES
+(1, 'TSS178247056', '0201001', 'penyetoran sampah', 1697696580);
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `users`
 --
 
-DROP TABLE IF EXISTS `users`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `users` (
   `id` varchar(18) NOT NULL,
+  `id_banksampah` bigint(20) DEFAULT NULL,
   `email` varchar(200) DEFAULT NULL,
   `username` varchar(20) NOT NULL,
   `password` varchar(255) NOT NULL,
@@ -380,70 +327,283 @@ CREATE TABLE `users` (
   `notelp` varchar(14) DEFAULT NULL,
   `nik` varchar(16) DEFAULT NULL,
   `alamat` varchar(255) DEFAULT NULL,
-  `tgl_lahir` varchar(10) NOT NULL DEFAULT '00-00-0000',
-  `kelamin` enum('laki-laki','perempuan') NOT NULL,
+  `tgl_lahir` varchar(10) DEFAULT '00-00-0000',
+  `kelamin` enum('laki-laki','perempuan') DEFAULT NULL,
   `token` text DEFAULT NULL,
   `is_active` tinyint(1) NOT NULL DEFAULT 1,
-  `last_active` bigint(19) NOT NULL DEFAULT 0,
+  `last_active` bigint(19) DEFAULT 0,
   `otp` varchar(6) DEFAULT NULL,
   `is_verify` tinyint(1) NOT NULL DEFAULT 0,
   `privilege` varchar(10) NOT NULL,
-  `created_at` bigint(20) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `username` (`username`),
-  UNIQUE KEY `email` (`email`),
-  UNIQUE KEY `notelp` (`notelp`)
+  `created_at` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `users`
 --
 
-LOCK TABLES `users` WRITE;
-/*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES ('0202001',NULL,'0202001','JKF717j8yWdhNIRxEvkIbg==','bagas',NULL,NULL,NULL,'','laki-laki',NULL,1,1689433047,'810524',1,'nasabah',1689433047),('A001','superadmin1@gmail.com','superadmin1','$2y$10$pXX0xsLpVYORnLyXmt7rSu4/xFyibBq91DAAPiJNjh4Ww9rbLCxxi','super admin 1',NULL,'1234567890123456',NULL,'30-06-2022','laki-laki','eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IkEwMDEiLCJ1bmlxdWVpZCI6IjY0YjJhYzBlMDhhYzIiLCJwYXNzd29yZCI6IiQyeSQxMCRwWFgweHNMcFZZT1JuTHlYbXQ3clN1NFwveEZ5aWJCcTkxREFBUGlKTmpoNFd3OXJiTEN4eGkiLCJwcml2aWxlZ2UiOiJzdXBlcmFkbWluIiwiZXhwaXJlZCI6MTY4OTUxNzQ1NH0.CO3D0eYmt1lwks7kGIfhmR_g_MYV29ltbbar8AFYdmY',1,1689431054,NULL,1,'superadmin',1656643582),('A002',NULL,'mypresiden424','$2y$10$Ag/6cwTCJE1MF/cx5l7SFuOv5CmWKfSR9WVAmbUjuiJ11VTmcbw1O','superadmin2','212121',NULL,'tes','31-08-2022','laki-laki','eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IkEwMDIiLCJ1bmlxdWVpZCI6IjYzZDY2NWE4NGNlMjgiLCJwYXNzd29yZCI6IiQyeSQxMCRBZ1wvNmN3VENKRTFNRlwvY3g1bDdTRnVPdjVDbVdLZlNSOVdWQW1iVWp1aUoxMVZUbWNidzFPIiwicHJpdmlsZWdlIjoic3VwZXJhZG1pbiIsImV4cGlyZWQiOjE2NzUwODE1MTJ9.Ig4PY6ZMuFfAXba95NLkRnh598T2_bmiQd_B_EzB5gY',1,1674995112,NULL,1,'superadmin',1661928108);
-/*!40000 ALTER TABLE `users` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `users` (`id`, `id_banksampah`, `email`, `username`, `password`, `nama_lengkap`, `notelp`, `nik`, `alamat`, `tgl_lahir`, `kelamin`, `token`, `is_active`, `last_active`, `otp`, `is_verify`, `privilege`, `created_at`) VALUES
+('0201001', 7, 'elkoro424@gmail.com', 'bagaskoro', 'f3p1bq8S3637g+gZ6Er82Q==', 'bagaskoro', '112233445577', '3674070310000002', 'serua ciputat', '18-10-2023', 'laki-laki', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjAyMDEwMDEiLCJ1bmlxdWVpZCI6IjY1MzA2MDI0YTg4OGQiLCJwYXNzd29yZCI6ImYzcDFicThTMzYzN2crZ1o2RXI4MlE9PSIsInByaXZpbGVnZSI6Im5hc2FiYWgiLCJleHBpcmVkIjoxNjk3NzU1NTU2fQ.mNUpnbRb1O1-VCjpviZ8mZcp1qmVqDvFyQdYQexyGTI', 1, 1697669156, NULL, 1, 'nasabah', 1697668183),
+('0402001', 7, NULL, '0402001', 'c5hmhsex/K5rPievAOIuDQ==', 'nasabah1', NULL, NULL, NULL, '', 'perempuan', NULL, 1, 1697651302, '301066', 1, 'nasabah', 1697651302),
+('A004', 7, 'bagaselkoro2@gmail.com', 'admintes1', 'ajAuZRLbwYtUhlWHwTyf1Q==', 'admin 1 bank sampah tes 2', '121213131414', NULL, 'alamat xx', '19-10-2023', 'laki-laki', NULL, 1, 1697696336, NULL, 1, 'superadmin', 1697642162);
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `wilayah`
 --
 
-DROP TABLE IF EXISTS `wilayah`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `wilayah` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL,
   `id_user` varchar(200) NOT NULL,
   `kodepos` varchar(10) NOT NULL,
   `kelurahan` varchar(200) NOT NULL,
   `kecamatan` varchar(200) NOT NULL,
   `kota` varchar(200) NOT NULL,
-  `provinsi` varchar(200) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `wilayah_id_user_foreign` (`id_user`),
-  CONSTRAINT `wilayah_id_user_foreign` FOREIGN KEY (`id_user`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=421 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `provinsi` varchar(200) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `wilayah`
 --
 
-LOCK TABLES `wilayah` WRITE;
-/*!40000 ALTER TABLE `wilayah` DISABLE KEYS */;
-INSERT INTO `wilayah` VALUES (420,'0202001','15414','sarua (serua)','ciputat','tangerang selatan','banten');
-/*!40000 ALTER TABLE `wilayah` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+INSERT INTO `wilayah` (`id`, `id_user`, `kodepos`, `kelurahan`, `kecamatan`, `kota`, `provinsi`) VALUES
+(422, '0402001', '15414', 'sarua (serua)', 'ciputat', 'tangerang selatan', 'banten'),
+(423, '0201001', '15414', 'sarua (serua)', 'ciputat', 'tangerang selatan', 'banten');
 
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `artikel`
+--
+ALTER TABLE `artikel`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `title` (`title`),
+  ADD KEY `artikel_id_kategori_foreign` (`id_kategori`);
+
+--
+-- Indexes for table `banksampah`
+--
+ALTER TABLE `banksampah`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `dompet`
+--
+ALTER TABLE `dompet`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `id_user` (`id_user`);
+
+--
+-- Indexes for table `jual_sampah`
+--
+ALTER TABLE `jual_sampah`
+  ADD PRIMARY KEY (`no`),
+  ADD KEY `jual_sampah_id_transaksi_foreign` (`id_transaksi`),
+  ADD KEY `jual_sampah_id_sampah_foreign` (`id_sampah`);
+
+--
+-- Indexes for table `kategori_artikel`
+--
+ALTER TABLE `kategori_artikel`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `name` (`name`);
+
+--
+-- Indexes for table `kategori_sampah`
+--
+ALTER TABLE `kategori_sampah`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `name` (`name`);
+
+--
+-- Indexes for table `migrations`
+--
+ALTER TABLE `migrations`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `mitra`
+--
+ALTER TABLE `mitra`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `name` (`name`);
+
+--
+-- Indexes for table `penghargaan`
+--
+ALTER TABLE `penghargaan`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `name` (`name`);
+
+--
+-- Indexes for table `sampah`
+--
+ALTER TABLE `sampah`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `jenis` (`jenis`),
+  ADD KEY `sampah_id_kategori_foreign` (`id_kategori`);
+
+--
+-- Indexes for table `setor_sampah`
+--
+ALTER TABLE `setor_sampah`
+  ADD PRIMARY KEY (`no`),
+  ADD KEY `setor_sampah_id_transaksi_foreign` (`id_transaksi`),
+  ADD KEY `setor_sampah_id_sampah_foreign` (`id_sampah`);
+
+--
+-- Indexes for table `tarik_saldo`
+--
+ALTER TABLE `tarik_saldo`
+  ADD PRIMARY KEY (`no`),
+  ADD KEY `tarik_saldo_id_transaksi_foreign` (`id_transaksi`);
+
+--
+-- Indexes for table `transaksi`
+--
+ALTER TABLE `transaksi`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `transaksi_id_user_foreign` (`id_user`),
+  ADD KEY `no` (`no`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `username` (`username`),
+  ADD UNIQUE KEY `email` (`email`),
+  ADD UNIQUE KEY `notelp` (`notelp`);
+
+--
+-- Indexes for table `wilayah`
+--
+ALTER TABLE `wilayah`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `wilayah_id_user_foreign` (`id_user`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `banksampah`
+--
+ALTER TABLE `banksampah`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `dompet`
+--
+ALTER TABLE `dompet`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=425;
+
+--
+-- AUTO_INCREMENT for table `jual_sampah`
+--
+ALTER TABLE `jual_sampah`
+  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=164;
+
+--
+-- AUTO_INCREMENT for table `migrations`
+--
+ALTER TABLE `migrations`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+
+--
+-- AUTO_INCREMENT for table `mitra`
+--
+ALTER TABLE `mitra`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT for table `penghargaan`
+--
+ALTER TABLE `penghargaan`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `setor_sampah`
+--
+ALTER TABLE `setor_sampah`
+  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5645;
+
+--
+-- AUTO_INCREMENT for table `tarik_saldo`
+--
+ALTER TABLE `tarik_saldo`
+  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
+
+--
+-- AUTO_INCREMENT for table `transaksi`
+--
+ALTER TABLE `transaksi`
+  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=665;
+
+--
+-- AUTO_INCREMENT for table `wilayah`
+--
+ALTER TABLE `wilayah`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=424;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `artikel`
+--
+ALTER TABLE `artikel`
+  ADD CONSTRAINT `artikel_id_kategori_foreign` FOREIGN KEY (`id_kategori`) REFERENCES `kategori_artikel` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `dompet`
+--
+ALTER TABLE `dompet`
+  ADD CONSTRAINT `dompet_id_user_foreign` FOREIGN KEY (`id_user`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `jual_sampah`
+--
+ALTER TABLE `jual_sampah`
+  ADD CONSTRAINT `jual_sampah_id_sampah_foreign` FOREIGN KEY (`id_sampah`) REFERENCES `sampah` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `jual_sampah_id_transaksi_foreign` FOREIGN KEY (`id_transaksi`) REFERENCES `transaksi` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `sampah`
+--
+ALTER TABLE `sampah`
+  ADD CONSTRAINT `sampah_id_kategori_foreign` FOREIGN KEY (`id_kategori`) REFERENCES `kategori_sampah` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `setor_sampah`
+--
+ALTER TABLE `setor_sampah`
+  ADD CONSTRAINT `setor_sampah_id_sampah_foreign` FOREIGN KEY (`id_sampah`) REFERENCES `sampah` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `setor_sampah_id_transaksi_foreign` FOREIGN KEY (`id_transaksi`) REFERENCES `transaksi` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `tarik_saldo`
+--
+ALTER TABLE `tarik_saldo`
+  ADD CONSTRAINT `tarik_saldo_id_transaksi_foreign` FOREIGN KEY (`id_transaksi`) REFERENCES `transaksi` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `transaksi`
+--
+ALTER TABLE `transaksi`
+  ADD CONSTRAINT `transaksi_id_user_foreign` FOREIGN KEY (`id_user`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `wilayah`
+--
+ALTER TABLE `wilayah`
+  ADD CONSTRAINT `wilayah_id_user_foreign` FOREIGN KEY (`id_user`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+COMMIT;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2023-07-15 23:01:12

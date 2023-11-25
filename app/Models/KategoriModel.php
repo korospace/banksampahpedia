@@ -39,9 +39,9 @@ class KategoriModel extends Model
         }
     }
 
-    public function countKategoriUtama(): string
+    public function countKategoriUtama($id_banksampah=null): string
     {
-        $total = $this->db->table("kategori_artikel")->select('count(id) AS total')->where('kategori_utama =',"1")->get()->getResultArray()[0]['total'];
+        $total = $this->db->table("kategori_artikel")->select('count(id) AS total')->where('kategori_utama =',"1")->where('id_banksampah =',$id_banksampah)->get()->getResultArray()[0]['total'];
 
         return $total;
     }
@@ -109,7 +109,7 @@ class KategoriModel extends Model
         } 
     }
 
-    public function deleteKategori(string $id,string $tableName): array
+    public function deleteKategori(string $id,string $tableName,$id_banksampah=false): array
     {
         try {
             if ($tableName == 'kategori_sampah') {
@@ -122,7 +122,7 @@ class KategoriModel extends Model
                 }
             }
 
-            $this->db->table($tableName)->where('id', $id)->delete();
+            $this->db->table($tableName)->where("id = '$id' AND id_banksampah = '$id_banksampah'")->delete();
             $affectedRows = $this->db->affectedRows();
 
             return [
@@ -140,10 +140,16 @@ class KategoriModel extends Model
         }
     }
 
-    public function getKategori(string $tableName): array
+    public function getKategori(string $tableName, $get): array
     {
         try {
-            $kategori = $this->db->table($tableName)->orderBy("created_at","desc")->get()->getResultArray();
+            $kategori = $this->db->table($tableName);
+
+            if ($get['id_banksampah'] != null) {
+                $kategori = $kategori->where('id_banksampah',$get['id_banksampah']);
+            }
+
+            $kategori = $kategori->orderBy("created_at","desc")->get()->getResultArray();
             
             $kategoriName = ($tableName == 'kategori_sampah') ? "kategori sampah" : "kategori artikel";
             
