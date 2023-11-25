@@ -884,11 +884,12 @@ class Validation
             ],
         ],
 		'penghargaan_name' => [
-            'rules'  => 'required|max_length[255]|is_unique[penghargaan.name]',
+            // 'rules'  => 'required|max_length[255]|is_unique[penghargaan.name]',
+            'rules'  => 'required|max_length[255]',
             'errors' => [
                 'required'    => 'penghargaan name is required',
                 'max_length'  => 'max 255 character',
-                'is_unique'   => 'penghargaan is exist',
+                // 'is_unique'   => 'penghargaan is exist',
             ],
 		],
         'description' => [
@@ -913,11 +914,12 @@ class Validation
             ],
         ],
 		'mitra_name' => [
-            'rules'  => 'required|max_length[255]|is_unique[mitra.name]',
+            // 'rules'  => 'required|max_length[255]|is_unique[mitra.name]',
+            'rules'  => 'required|max_length[255]',
             'errors' => [
                 'required'    => 'mitra name is required',
                 'max_length'  => 'max 255 character',
-                'is_unique'   => 'mitra is exist',
+                // 'is_unique'   => 'mitra is exist',
             ],
 		],
         'description' => [
@@ -944,11 +946,12 @@ class Validation
             ],
         ],
 		'kategori_name' => [
-            'rules'  => 'required|max_length[100]|is_unique[kategori_artikel.name]',
+            // 'rules'  => 'required|max_length[100]|is_unique[kategori_artikel.name]',
+            'rules'  => 'required|max_length[100]',
             'errors' => [
                 'required'    => 'kategori name is required',
                 'max_length'  => 'max 100 character',
-                'is_unique'   => 'kategori name is exist',
+                // 'is_unique'   => 'kategori name is exist',
             ],
 		],
         'description' => [
@@ -976,11 +979,12 @@ class Validation
             ],
 		],
 		'kategori_name' => [
-            'rules'  => 'required|max_length[100]|is_unique[kategori_artikel.name,kategori_artikel.id,{id}]',
+            // 'rules'  => 'required|max_length[100]|is_unique[kategori_artikel.name,kategori_artikel.id,{id}]',
+            'rules'  => 'required|max_length[100]',
             'errors' => [
                 'required'    => 'kategori name is required',
                 'max_length'  => 'max 100 character',
-                'is_unique'   => 'kategori name is exist',
+                // 'is_unique'   => 'kategori name is exist',
             ],
 		],
         'description' => [
@@ -1012,11 +1016,12 @@ class Validation
     // add artikel
 	public $addArtikelValidate = [
 		'title' => [
-            'rules'  => 'required|max_length[250]|is_unique[artikel.title]',
+            // 'rules'  => 'required|max_length[250]|is_unique[artikel.title]',
+            'rules'  => 'required|max_length[250]',
             'errors' => [
                 'required'    => 'title is required',
                 'max_length'  => 'max 250 character',
-                'is_unique'   => 'judul ({value}) sudah ada',
+                // 'is_unique'   => 'judul ({value}) sudah ada',
             ],
 		],
 		'thumbnail' => [
@@ -1053,11 +1058,12 @@ class Validation
             ],
 		],
 		'title' => [
-            'rules'  => 'required|max_length[250]|is_unique[artikel.title,artikel.id,{id}]',
+            // 'rules'  => 'required|max_length[250]|is_unique[artikel.title,artikel.id,{id}]',
+            'rules'  => 'required|max_length[250]',
             'errors' => [
                 'required'    => 'title is required',
                 'max_length'  => 'max 250 character',
-                'is_unique'   => 'judul ({value}) sudah ada',
+                // 'is_unique'   => 'judul ({value}) sudah ada',
             ],
 		],
 		'content' => [
@@ -1104,11 +1110,12 @@ class Validation
     // kategori sampah
 	public $kategoriSampahValidate = [
 		'kategori_name' => [
-            'rules'  => 'required|max_length[100]|is_unique[kategori_sampah.name]',
+            // 'rules'  => 'required|max_length[100]|is_unique[kategori_sampah.name]',
+            'rules'  => 'required|max_length[100]',
             'errors' => [
                 'required'    => 'kategori_name is required',
                 'max_length'  => 'max 100 character',
-                'is_unique'   => 'kategori_name is exist',
+                // 'is_unique'   => 'kategori_name is exist',
             ],
 		]
 	];
@@ -1123,11 +1130,12 @@ class Validation
             ],
 		],
 		'jenis' => [
-            'rules'  => 'required|max_length[200]|is_unique[sampah.jenis]',
+            // 'rules'  => 'required|max_length[200]|is_unique[sampah.jenis]',
+            'rules'  => 'required|max_length[200]',
             'errors' => [
                 'required'    => 'jenis is required',
                 'max_length'  => 'max 200 character',
-                'is_unique'   => "jenis '{value}' sudah ada",
+                // 'is_unique'   => "jenis '{value}' sudah ada",
             ],
 		],
 		'harga' => [
@@ -1165,11 +1173,12 @@ class Validation
             ],
 		],
 		'jenis' => [
-            'rules'  => 'required|max_length[200]|is_unique[sampah.jenis,sampah.id,{id}]',
+            // 'rules'  => 'required|max_length[200]|is_unique[sampah.jenis,sampah.id,{id}]',
+            'rules'  => 'required|max_length[200]',
             'errors' => [
                 'required'    => 'jenis is required',
                 'max_length'  => 'max 200 character',
-                'is_unique'   => "jenis '{value}' sudah ada",
+                // 'is_unique'   => "jenis '{value}' sudah ada",
             ],
 		],
 		'harga' => [
