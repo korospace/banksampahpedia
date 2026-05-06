@@ -1,6 +1,7 @@
 /node_modules
-/public/assets/tailwind/node_modules
 package-lock.json
+/public/assets/tailwind/node_modules
+/public/assets/tailwind/package-lock.json
 /backup
 
 #-------------------------
