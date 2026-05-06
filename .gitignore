@@ -1,4 +1,5 @@
 /node_modules
+/public/assets/tailwind/node_modules
 package-lock.json
 /backup
 

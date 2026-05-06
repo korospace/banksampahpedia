@@ -6,18 +6,52 @@
 
 ## Requirements
 
-- php 7.3 or higher
-- [composer 2.3.4](https://getcomposer.org/)
-- XAMPP
+- docker
+- docker-compose
+- Setup mysql container
+- Setup phpmyadmin container
+- Create database with name `db_bst`
 
-## Setup
+## Import database
+open phpmyadmin and import `db_banksampahpedia.sql` into database `db_banksampahpedia`
 
-<ol>
-    <li> clone <b>or</b> Download as ZIP
-    <li>place the project folder inside the 'htdocs' folder</li>
-    <li>name that folder 'banksampahpedia'</li>
-    <li>turn on your XAMPP</li>
-    <li>create database <b>db_banksampahpedia</b></li>
-    <li>import db_banksampahpedia.sql</li>
-    <li>open <a href="http://localhost/banksampahpedia/public/">http://localhost/banksampahpedia/public/</a> on your browser</li>
-</ol>
+## How to run container
+### edit `.env`
+```php
+// ...
+
+database.default.hostname = mysql_korospace # mysql container name
+database.default.database = db_banksampahpedia
+database.default.username = root
+database.default.password = root
+database.default.DBDriver = MySQLi
+database.default.DBPrefix = 
+
+// ...
+```
+
+### how to run
+```php
+docker-compose up -d
+```
+
+### how to stop
+```php
+// stop service
+docker-compose stop
+
+// stop service and remove container
+docker-compose down
+```
+
+## How to run ci4
+### install composer
+```php
+docker-compose exec ci4_banksampahpedia_container composer install
+```
+
+## Other Command Cheatseet
+### turn into bash
+```php
+docker-compose exec -i -t ci4_banksampahpedia_container bash
+```
