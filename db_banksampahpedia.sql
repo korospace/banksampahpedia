@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.3
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: Oct 19, 2023 at 08:36 AM
--- Server version: 10.4.27-MariaDB
--- PHP Version: 7.4.33
+-- Host: mysql_korospace
+-- Generation Time: May 07, 2026 at 06:32 AM
+-- Server version: 8.4.7
+-- PHP Version: 8.3.27
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -34,10 +34,10 @@ CREATE TABLE `artikel` (
   `thumbnail` varchar(50) NOT NULL,
   `content` longtext NOT NULL,
   `id_kategori` varchar(200) NOT NULL,
-  `created_at` bigint(20) NOT NULL,
-  `published_at` bigint(20) NOT NULL,
-  `id_banksampah` bigint(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+  `created_at` bigint NOT NULL,
+  `published_at` bigint NOT NULL,
+  `id_banksampah` bigint DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
 
@@ -46,16 +46,16 @@ CREATE TABLE `artikel` (
 --
 
 CREATE TABLE `banksampah` (
-  `id` bigint(20) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `slug` text NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `notelp` varchar(255) NOT NULL,
-  `description` longtext NOT NULL,
-  `address` longtext NOT NULL,
-  `logo` varchar(255) NOT NULL,
-  `created_at` int(11) NOT NULL,
-  `updated_at` int(11) DEFAULT NULL
+  `id` bigint NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `slug` text COLLATE utf8mb4_general_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `notelp` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `description` longtext COLLATE utf8mb4_general_ci NOT NULL,
+  `address` longtext COLLATE utf8mb4_general_ci NOT NULL,
+  `logo` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `created_at` int NOT NULL,
+  `updated_at` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -73,18 +73,19 @@ INSERT INTO `banksampah` (`id`, `name`, `slug`, `email`, `notelp`, `description`
 --
 
 CREATE TABLE `dompet` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL,
+  `id_banksampah` bigint DEFAULT NULL,
   `id_user` varchar(200) DEFAULT NULL,
-  `uang` decimal(11,2) NOT NULL DEFAULT 0.00
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+  `uang` decimal(11,2) NOT NULL DEFAULT '0.00'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 --
 -- Dumping data for table `dompet`
 --
 
-INSERT INTO `dompet` (`id`, `id_user`, `uang`) VALUES
-(423, '0402001', '0.00'),
-(424, '0201001', '7200.00');
+INSERT INTO `dompet` (`id`, `id_banksampah`, `id_user`, `uang`) VALUES
+(423, 7, '0402001', 0.00),
+(424, 7, '0201001', 7200.00);
 
 -- --------------------------------------------------------
 
@@ -93,15 +94,15 @@ INSERT INTO `dompet` (`id`, `id_user`, `uang`) VALUES
 --
 
 CREATE TABLE `jual_sampah` (
-  `no` int(11) NOT NULL,
+  `no` int NOT NULL,
   `id_transaksi` varchar(200) NOT NULL,
   `id_sampah` varchar(200) NOT NULL,
-  `harga_pusat` int(11) NOT NULL DEFAULT 0,
-  `harga` int(11) NOT NULL DEFAULT 0,
+  `harga_pusat` int NOT NULL DEFAULT '0',
+  `harga` int NOT NULL DEFAULT '0',
   `jumlah_kg` decimal(65,2) NOT NULL,
   `harga_nasabah` decimal(11,2) NOT NULL,
   `jumlah_rp` decimal(11,2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
 
@@ -115,9 +116,9 @@ CREATE TABLE `kategori_artikel` (
   `name` varchar(100) NOT NULL,
   `description` text NOT NULL,
   `kategori_utama` tinyint(1) NOT NULL,
-  `created_at` bigint(20) NOT NULL,
-  `id_banksampah` bigint(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+  `created_at` bigint NOT NULL,
+  `id_banksampah` bigint DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 --
 -- Dumping data for table `kategori_artikel`
@@ -137,9 +138,9 @@ INSERT INTO `kategori_artikel` (`id`, `icon`, `name`, `description`, `kategori_u
 CREATE TABLE `kategori_sampah` (
   `id` varchar(6) NOT NULL,
   `name` varchar(100) NOT NULL,
-  `created_at` bigint(20) NOT NULL,
-  `id_banksampah` bigint(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+  `created_at` bigint NOT NULL,
+  `id_banksampah` bigint DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 --
 -- Dumping data for table `kategori_sampah`
@@ -159,14 +160,14 @@ INSERT INTO `kategori_sampah` (`id`, `name`, `created_at`, `id_banksampah`) VALU
 --
 
 CREATE TABLE `migrations` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
   `version` varchar(255) NOT NULL,
   `class` varchar(255) NOT NULL,
   `group` varchar(255) NOT NULL,
   `namespace` varchar(255) NOT NULL,
-  `time` int(11) NOT NULL,
-  `batch` int(11) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+  `time` int NOT NULL,
+  `batch` int UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 --
 -- Dumping data for table `migrations`
@@ -194,12 +195,12 @@ INSERT INTO `migrations` (`id`, `version`, `class`, `group`, `namespace`, `time`
 --
 
 CREATE TABLE `mitra` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL,
   `icon` text NOT NULL,
   `name` varchar(255) NOT NULL,
   `description` text NOT NULL,
-  `id_banksampah` bigint(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+  `id_banksampah` bigint DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 --
 -- Dumping data for table `mitra`
@@ -216,12 +217,12 @@ INSERT INTO `mitra` (`id`, `icon`, `name`, `description`, `id_banksampah`) VALUE
 --
 
 CREATE TABLE `penghargaan` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL,
   `icon` text NOT NULL,
   `name` varchar(255) NOT NULL,
   `description` text NOT NULL,
-  `id_banksampah` bigint(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+  `id_banksampah` bigint DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 --
 -- Dumping data for table `penghargaan`
@@ -241,18 +242,18 @@ CREATE TABLE `sampah` (
   `id` varchar(6) NOT NULL,
   `id_kategori` varchar(200) NOT NULL,
   `jenis` varchar(200) NOT NULL,
-  `harga` int(11) NOT NULL,
-  `harga_pusat` int(11) NOT NULL DEFAULT 0,
-  `jumlah` decimal(65,2) NOT NULL DEFAULT 0.00,
-  `id_banksampah` bigint(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+  `harga` int NOT NULL,
+  `harga_pusat` int NOT NULL DEFAULT '0',
+  `jumlah` decimal(65,2) NOT NULL DEFAULT '0.00',
+  `id_banksampah` bigint DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 --
 -- Dumping data for table `sampah`
 --
 
 INSERT INTO `sampah` (`id`, `id_kategori`, `jenis`, `harga`, `harga_pusat`, `jumlah`, `id_banksampah`) VALUES
-('S001', 'KS07', 'jenis a', 1800, 2000, '4.00', 7);
+('S001', 'KS07', 'jenis a', 1800, 2000, 4.00, 7);
 
 -- --------------------------------------------------------
 
@@ -261,21 +262,21 @@ INSERT INTO `sampah` (`id`, `id_kategori`, `jenis`, `harga`, `harga_pusat`, `jum
 --
 
 CREATE TABLE `setor_sampah` (
-  `no` int(11) NOT NULL,
+  `no` int NOT NULL,
   `id_transaksi` varchar(200) NOT NULL,
   `id_sampah` varchar(200) NOT NULL,
-  `harga_pusat` int(11) NOT NULL DEFAULT 0,
-  `harga` int(11) NOT NULL DEFAULT 0,
+  `harga_pusat` int NOT NULL DEFAULT '0',
+  `harga` int NOT NULL DEFAULT '0',
   `jumlah_kg` decimal(65,2) NOT NULL,
   `jumlah_rp` decimal(11,2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 --
 -- Dumping data for table `setor_sampah`
 --
 
 INSERT INTO `setor_sampah` (`no`, `id_transaksi`, `id_sampah`, `harga_pusat`, `harga`, `jumlah_kg`, `jumlah_rp`) VALUES
-(5644, 'TSS178247056', 'S001', 2000, 1800, '4.00', '7200.00');
+(5644, 'TSS178247056', 'S001', 2000, 1800, 4.00, 7200.00);
 
 -- --------------------------------------------------------
 
@@ -284,11 +285,11 @@ INSERT INTO `setor_sampah` (`no`, `id_transaksi`, `id_sampah`, `harga_pusat`, `h
 --
 
 CREATE TABLE `tarik_saldo` (
-  `no` int(11) NOT NULL,
+  `no` int NOT NULL,
   `id_transaksi` varchar(200) NOT NULL,
   `jumlah_tarik` decimal(65,4) NOT NULL,
-  `description` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+  `description` text
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
 
@@ -297,12 +298,12 @@ CREATE TABLE `tarik_saldo` (
 --
 
 CREATE TABLE `transaksi` (
-  `no` int(11) NOT NULL,
+  `no` int NOT NULL,
   `id` varchar(12) NOT NULL,
   `id_user` varchar(200) NOT NULL,
   `jenis_transaksi` varchar(50) NOT NULL,
-  `date` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+  `date` bigint NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 --
 -- Dumping data for table `transaksi`
@@ -319,7 +320,7 @@ INSERT INTO `transaksi` (`no`, `id`, `id_user`, `jenis_transaksi`, `date`) VALUE
 
 CREATE TABLE `users` (
   `id` varchar(18) NOT NULL,
-  `id_banksampah` bigint(20) DEFAULT NULL,
+  `id_banksampah` bigint DEFAULT NULL,
   `email` varchar(200) DEFAULT NULL,
   `username` varchar(20) NOT NULL,
   `password` varchar(255) NOT NULL,
@@ -329,23 +330,23 @@ CREATE TABLE `users` (
   `alamat` varchar(255) DEFAULT NULL,
   `tgl_lahir` varchar(10) DEFAULT '00-00-0000',
   `kelamin` enum('laki-laki','perempuan') DEFAULT NULL,
-  `token` text DEFAULT NULL,
-  `is_active` tinyint(1) NOT NULL DEFAULT 1,
-  `last_active` bigint(19) DEFAULT 0,
+  `token` text,
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `last_active` bigint DEFAULT '0',
   `otp` varchar(6) DEFAULT NULL,
-  `is_verify` tinyint(1) NOT NULL DEFAULT 0,
+  `is_verify` tinyint(1) NOT NULL DEFAULT '0',
   `privilege` varchar(10) NOT NULL,
-  `created_at` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+  `created_at` bigint NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 --
 -- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`id`, `id_banksampah`, `email`, `username`, `password`, `nama_lengkap`, `notelp`, `nik`, `alamat`, `tgl_lahir`, `kelamin`, `token`, `is_active`, `last_active`, `otp`, `is_verify`, `privilege`, `created_at`) VALUES
-('0201001', 7, 'elkoro424@gmail.com', 'bagaskoro', 'f3p1bq8S3637g+gZ6Er82Q==', 'bagaskoro', '112233445577', '3674070310000002', 'serua ciputat', '18-10-2023', 'laki-laki', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjAyMDEwMDEiLCJ1bmlxdWVpZCI6IjY1MzA2MDI0YTg4OGQiLCJwYXNzd29yZCI6ImYzcDFicThTMzYzN2crZ1o2RXI4MlE9PSIsInByaXZpbGVnZSI6Im5hc2FiYWgiLCJleHBpcmVkIjoxNjk3NzU1NTU2fQ.mNUpnbRb1O1-VCjpviZ8mZcp1qmVqDvFyQdYQexyGTI', 1, 1697669156, NULL, 1, 'nasabah', 1697668183),
+('0201001', 7, 'elkoro424@gmail.com', 'bagaskoro', 'f3p1bq8S3637g+gZ6Er82Q==', 'bagaskoro', '112233445577', '3674070310000002', 'serua ciputat', '18-10-2023', 'laki-laki', NULL, 1, 1778060878, NULL, 1, 'nasabah', 1697668183),
 ('0402001', 7, NULL, '0402001', 'c5hmhsex/K5rPievAOIuDQ==', 'nasabah1', NULL, NULL, NULL, '', 'perempuan', NULL, 1, 1697651302, '301066', 1, 'nasabah', 1697651302),
-('A004', 7, 'bagaselkoro2@gmail.com', 'admintes1', 'ajAuZRLbwYtUhlWHwTyf1Q==', 'admin 1 bank sampah tes 2', '121213131414', NULL, 'alamat xx', '19-10-2023', 'laki-laki', NULL, 1, 1697696336, NULL, 1, 'superadmin', 1697642162);
+('A004', 7, 'bagaselkoro@gmail.com', 'admintes1', 'ajAuZRLbwYtUhlWHwTyf1Q==', 'admin 1 bank sampah tes 2', '121213131414', NULL, 'alamat xx', '19-10-2023', 'laki-laki', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IkEwMDQiLCJ1bmlxdWVpZCI6IjY5ZmIwZjBlMGRmNjMiLCJwYXNzd29yZCI6ImFkbWludGVzMSIsInByaXZpbGVnZSI6InN1cGVyYWRtaW4iLCJleHBpcmVkIjoxNzc4MTQ3NDcwfQ.e_MBy7LWhNfuRbsuJf3SCkzG3J0nZ3jYTnaxxrYAdxI', 1, 1778061070, NULL, 1, 'superadmin', 1697642162);
 
 -- --------------------------------------------------------
 
@@ -354,14 +355,14 @@ INSERT INTO `users` (`id`, `id_banksampah`, `email`, `username`, `password`, `na
 --
 
 CREATE TABLE `wilayah` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL,
   `id_user` varchar(200) NOT NULL,
   `kodepos` varchar(10) NOT NULL,
   `kelurahan` varchar(200) NOT NULL,
   `kecamatan` varchar(200) NOT NULL,
   `kota` varchar(200) NOT NULL,
   `provinsi` varchar(200) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 --
 -- Dumping data for table `wilayah`
@@ -493,61 +494,61 @@ ALTER TABLE `wilayah`
 -- AUTO_INCREMENT for table `banksampah`
 --
 ALTER TABLE `banksampah`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `dompet`
 --
 ALTER TABLE `dompet`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=425;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=425;
 
 --
 -- AUTO_INCREMENT for table `jual_sampah`
 --
 ALTER TABLE `jual_sampah`
-  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=164;
+  MODIFY `no` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=164;
 
 --
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT for table `mitra`
 --
 ALTER TABLE `mitra`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `penghargaan`
 --
 ALTER TABLE `penghargaan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `setor_sampah`
 --
 ALTER TABLE `setor_sampah`
-  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5645;
+  MODIFY `no` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5645;
 
 --
 -- AUTO_INCREMENT for table `tarik_saldo`
 --
 ALTER TABLE `tarik_saldo`
-  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
+  MODIFY `no` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
 
 --
 -- AUTO_INCREMENT for table `transaksi`
 --
 ALTER TABLE `transaksi`
-  MODIFY `no` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=665;
+  MODIFY `no` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=665;
 
 --
 -- AUTO_INCREMENT for table `wilayah`
 --
 ALTER TABLE `wilayah`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=424;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=424;
 
 --
 -- Constraints for dumped tables
