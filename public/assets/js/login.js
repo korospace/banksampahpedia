@@ -58,7 +58,12 @@ $('#formLoginNasabah').on('submit', function(e) {
                     url = LASTURL;
                 }
 
-                document.cookie = `token=${response.data.token}; path=/;SameSite=None; Secure`;
+                let isLocal = location.protocol === 'http:';
+                let cookieOptions = isLocal
+                    ? 'path=/'                       
+                    : 'path=/;SameSite=None;Secure';
+
+                document.cookie = `token=${response.data.token}; ${cookieOptions}`;
                 window.location.replace(url);
             })
             .catch((error) => {
@@ -102,8 +107,13 @@ $('#formLoginNasabah').on('submit', function(e) {
             })
             .then((response) => {
                 hideLoadingSpinner();
-    
-                document.cookie = `token=${response.data.token}; path=/;SameSite=None; Secure`;
+
+                let isLocal = location.protocol === 'http:';
+                let cookieOptions = isLocal
+                    ? 'path=/'                       
+                    : 'path=/;SameSite=None;Secure';
+
+                document.cookie = `token=${response.data.token}; ${cookieOptions}`;
                 window.location.replace(`${BASEURL}/nasabah`);
             })
             .catch((error) => {
