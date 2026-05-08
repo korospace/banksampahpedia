@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql_korospace
--- Generation Time: May 07, 2026 at 06:32 AM
+-- Generation Time: May 08, 2026 at 12:29 PM
 -- Server version: 8.4.7
 -- PHP Version: 8.3.27
 
@@ -114,6 +114,7 @@ CREATE TABLE `kategori_artikel` (
   `id` varchar(6) NOT NULL,
   `icon` text NOT NULL,
   `name` varchar(100) NOT NULL,
+  `slug` text NOT NULL,
   `description` text NOT NULL,
   `kategori_utama` tinyint(1) NOT NULL,
   `created_at` bigint NOT NULL,
@@ -124,10 +125,10 @@ CREATE TABLE `kategori_artikel` (
 -- Dumping data for table `kategori_artikel`
 --
 
-INSERT INTO `kategori_artikel` (`id`, `icon`, `name`, `description`, `kategori_utama`, `created_at`, `id_banksampah`) VALUES
-('KA06', '65301cff4b45b.png', 'kat 1 xx', 'kat 1 xx', 1, 1697651967, 7),
-('KA08', '65301d343c8ff.png', 'kat hoho', 'kat hoho', 1, 1697652020, 5),
-('KA09', '65301d4290401.jpeg', 'kat yuhu', 'kat yuhu', 1, 1697652034, 5);
+INSERT INTO `kategori_artikel` (`id`, `icon`, `name`, `slug`, `description`, `kategori_utama`, `created_at`, `id_banksampah`) VALUES
+('KA06', '65612bc3a50d2.jpeg', 'kat 1 xx', 'kat-1-xx', 'kat 1 xx', 1, 1697651967, 7),
+('KA08', '65612bd7efe01.jpeg', 'kat hoho', 'kat-hoho', 'kat hoho', 1, 1697652020, 5),
+('KA09', '65612c0fedad5.jpeg', 'kat yuhu', 'kat-yuhu', 'kat yuhu', 1, 1697652034, 5);
 
 -- --------------------------------------------------------
 
@@ -344,7 +345,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `id_banksampah`, `email`, `username`, `password`, `nama_lengkap`, `notelp`, `nik`, `alamat`, `tgl_lahir`, `kelamin`, `token`, `is_active`, `last_active`, `otp`, `is_verify`, `privilege`, `created_at`) VALUES
-('0201001', 7, 'elkoro424@gmail.com', 'bagaskoro', 'f3p1bq8S3637g+gZ6Er82Q==', 'bagaskoro', '112233445577', '3674070310000002', 'serua ciputat', '18-10-2023', 'laki-laki', NULL, 1, 1778060878, NULL, 1, 'nasabah', 1697668183),
+('0201001', 7, 'elkoro424@gmail.com', 'bagaskoro', 'f3p1bq8S3637g+gZ6Er82Q==', 'bagaskoro', '112233445577', '3674070310000002', 'serua ciputat', '18-10-2023', 'laki-laki', NULL, 1, 1778230155, NULL, 1, 'nasabah', 1697668183),
 ('0402001', 7, NULL, '0402001', 'c5hmhsex/K5rPievAOIuDQ==', 'nasabah1', NULL, NULL, NULL, '', 'perempuan', NULL, 1, 1697651302, '301066', 1, 'nasabah', 1697651302),
 ('A004', 7, 'bagaselkoro@gmail.com', 'admintes1', 'ajAuZRLbwYtUhlWHwTyf1Q==', 'admin 1 bank sampah tes 2', '121213131414', NULL, 'alamat xx', '19-10-2023', 'laki-laki', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IkEwMDQiLCJ1bmlxdWVpZCI6IjY5ZmIwZjBlMGRmNjMiLCJwYXNzd29yZCI6ImFkbWludGVzMSIsInByaXZpbGVnZSI6InN1cGVyYWRtaW4iLCJleHBpcmVkIjoxNzc4MTQ3NDcwfQ.e_MBy7LWhNfuRbsuJf3SCkzG3J0nZ3jYTnaxxrYAdxI', 1, 1778061070, NULL, 1, 'superadmin', 1697642162);
 
