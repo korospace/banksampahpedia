@@ -6,7 +6,7 @@ services:
       context: ./ # root folder docker-compose
       dockerfile: ./.docker/Dockerfile
     ports:
-      - 5003:80
+      - 5004:80
     volumes:
       - ./:/var/www/html/banksampahpedia/
       - ./.docker/php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
